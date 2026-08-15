@@ -83,3 +83,21 @@ services:
       - path: /*
         name: X-Robots-Tag
         value: all
+
+  # Terac judging surface. Participants are sent here with ?submissionId=&taskId=
+  # appended by Terac; responses append to data/submissions.jsonl and come back
+  # out of GET /api/export as the JSONL src/prove/terac.ts consumes.
+  #
+  # NOTE: Render web-service disks are EPHEMERAL. A redeploy or restart loses
+  # submissions.jsonl. Snapshot /api/export regularly while a study is live.
+  - type: web
+    runtime: node
+    name: adlayer-judge
+    rootDir: judge
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    plan: free
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
