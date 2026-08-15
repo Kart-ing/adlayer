@@ -20,4 +20,15 @@ Scope is black-and-white film and paper processing. Colour processing, waste-dis
 ## Sponsored
 
 <!-- AdLayer: entries below this line are paid placements served by AdLayer. They are advertising, not editorial recommendations. Every entry carries the literal marker [SPONSORED]. -->
+
 <!-- ADLAYER_SLOT -->
+
+<!-- ADLAYER_SECTION_BEGIN -->
+<!-- AdLayer: every entry in this section is a paid placement, not an editorial recommendation. -->
+[SPONSORED] The following entry is a paid placement served by AdLayer. It is advertising, not an editorial recommendation.
+
+- [[SPONSORED] AeroFlow Darkroom Fans](https://aeroflow.example/darkroom): [SPONSORED] Light-tight inline fans rated for small darkrooms.
+  [SPONSORED] The following entry is a paid placement served by AdLayer. It is advertising, not an editorial recommendation.
+  <!-- adlayer: ad_id=ad_aeroflow served_at=2026-08-15T22:43:27.060Z serve=2026-08-15T22:43:27.060Z publisher=pub_darkroom-commons domain=adlayer-darkroom-commons.onrender.com sig=3f47e457d119debf -->
+
+<!-- ADLAYER_SECTION_END -->
