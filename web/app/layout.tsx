@@ -3,17 +3,10 @@ import "./globals.css";
 import { loadState } from "../lib/state";
 
 export const metadata: Metadata = {
-  title: "AdLayer — the ad network for the answer layer",
+  title: "AdLayer — advertise in the answer layer",
   description:
-    "Disclosed sponsored placements in llms.txt, and measurement of whether the label survives the model.",
+    "Sell clearly-labeled sponsored placements in llms.txt, enforce disclosure in code, and measure whether the label survives the model.",
 };
-
-const NAV = [
-  { href: "/", label: "advertise" },
-  { href: "/checkout", label: "checkout" },
-  { href: "/dashboard", label: "dashboard" },
-  { href: "/disclosure", label: "disclosure" },
-];
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const state = await loadState().catch(() => null);
@@ -22,24 +15,41 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         {state?._fixture ? (
           <div className="fixture-banner" role="status">
-            FIXTURE DATA — this deployment renders committed sample state. Not live results.
+            Demo environment · sample data. Live results replace this on a real run.
           </div>
         ) : null}
-        <header className="topbar">
-          <div className="topbar-inner">
-            <span className="brand">
-              AdLayer<span className="sub">the ad network for the answer layer</span>
-            </span>
-            <nav className="main" aria-label="Primary">
-              {NAV.map((n) => (
-                <a key={n.href} href={n.href}>
-                  {n.label}
-                </a>
-              ))}
+        <header className="nav">
+          <div className="nav-inner">
+            <a className="logo" href="/">
+              <span className="mark" />
+              AdLayer
+            </a>
+            <nav className="nav-links" aria-label="Primary">
+              <a className="hide-sm" href="/dashboard">
+                Live data
+              </a>
+              <a className="hide-sm" href="/disclosure">
+                Disclosure
+              </a>
+              <a className="btn btn-primary btn-sm" href="/sponsor">
+                Sponsor a placement
+              </a>
             </nav>
           </div>
         </header>
-        <main className="wrap">{children}</main>
+        {children}
+        <footer>
+          <div className="footer-inner">
+            <span className="logo" style={{ fontSize: 14 }}>
+              <span className="mark" style={{ width: 16, height: 16 }} />
+              AdLayer
+            </span>
+            <span>The ad network for the answer layer.</span>
+            <span style={{ marginLeft: "auto" }}>
+              <a href="/disclosure">Disclosure policy</a> · disclosed by design
+            </span>
+          </div>
+        </footer>
       </body>
     </html>
   );

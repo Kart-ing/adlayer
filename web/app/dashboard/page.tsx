@@ -92,9 +92,9 @@ export default async function Dashboard() {
     checks.find((c) => c.query === q && c.engine === e);
 
   return (
-    <>
-      <p className="kicker">Propagation · answer layer</p>
-      <h1>Does the &ldquo;sponsored&rdquo; label survive the model?</h1>
+    <div className="page">
+      <p className="kick">Propagation · answer layer</p>
+      <h1 className="title">Does the &ldquo;sponsored&rdquo; label survive the model?</h1>
       <p className="lede">
         We serve a disclosed placement into a publisher&rsquo;s <code>llms.txt</code>, then poll answer
         engines. Live-retrieval and ingestion engines are reported separately — they measure different
@@ -139,7 +139,7 @@ export default async function Dashboard() {
         const creative = state.creatives.find((c) => c.id === p.creative_id);
         return (
           <section key={p.id}>
-            <h2>
+            <h2 className="sec">
               placement · {creative?.title ?? p.creative_id} → {p.publisher_id} · served {ts(p.served_at)}
             </h2>
             <div className="legend">
@@ -204,7 +204,7 @@ export default async function Dashboard() {
 
       {terac ? (
         <section>
-          <h2>Terac trust study · predicted → actual ({terac.after.variant} arm)</h2>
+          <h2 className="sec">Terac trust study · predicted → actual ({terac.after.variant} arm)</h2>
           <div className="panel">
             <div className="cmp">
               <CmpRow name="Would still trust" before={terac.before.trust_rate} after={terac.after.trust_rate} />
@@ -227,7 +227,7 @@ export default async function Dashboard() {
       ) : null}
 
       <section>
-        <h2>Creatives &amp; compliance</h2>
+        <h2 className="sec">Creatives &amp; compliance</h2>
         <div className="panel scroll-x" style={{ padding: 0 }}>
           <table className="data">
             <thead>
@@ -259,6 +259,6 @@ export default async function Dashboard() {
           </table>
         </div>
       </section>
-    </>
+    </div>
   );
 }
