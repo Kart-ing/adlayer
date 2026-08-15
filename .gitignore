@@ -9,3 +9,7 @@ next-env.d.ts
 judge/data/submissions.jsonl
 .DS_Store
 *.log
+
+# outreach: never commit prospect messages or the opt-out list
+.outbox/
+data/outreach-suppression.jsonl

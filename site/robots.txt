@@ -1,0 +1,3 @@
+# AdLayer advertiser site. Indexing is welcome, including by agents.
+User-agent: *
+Allow: /

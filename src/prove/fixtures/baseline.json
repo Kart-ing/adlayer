@@ -1,33 +1,93 @@
 {
-  "_note": "FIXTURE — pre-serve baseline captured 2026-08-15 ~12:50, before the 13:00 serve. Keyed `${engine}:${query}` (query lowercased). The advertiser (acme.example) is invisible for every query pre-serve, so any post-serve surfacing is attributable to the placement, not organic presence.",
-  "perplexity/sonar:best kanban for small remote teams": {
+  "_note": "Pre-serve baseline captured 2026-08-15T22:09:46.116Z. Keyed \"<engine>:<query>\" (query lowercased). Advertiser presence recorded BEFORE the first serve so measurement can tell \"was already there\" from \"appeared because of us\".",
+  "perplexity/sonar:how to ventilate a shared community darkroom": {
     "present": false,
-    "answer_excerpt": "For small remote teams, common kanban picks are Trello and a couple of open-source boards.",
-    "cited_urls": ["https://trello.com", "https://www.reddit.com/r/projectmanagement"]
+    "answer_excerpt": "For a **shared community darkroom**, the most authoritative sources in your results are the **ILFORD health and safety FAQ** and the **Indian Health Service mechanical guidelines** because they give concrete ventilation guidance, including airflow targets and exhaust recommendations.[1][3] - **ILFORD Photo – Health an…",
+    "cited_urls": [
+      "https://www.ilfordphoto.com/faqs/health-safety-faqs/",
+      "https://www.reddit.com/r/Darkroom/comments/uo1nlu/what_are_ways_in_which_i_can_ventilate_my_darkroom/",
+      "https://www.ihs.gov/sites/oehe/themes/responsive2017/display_objects/documents/handbook/02104a8.pdf",
+      "https://groups.google.com/g/rec.photo.darkroom/c/i83XiJfJ-Bc",
+      "https://www.reddit.com/r/Darkroom/comments/l2wz8t/ventilation_help/",
+      "https://www.largeformatphotography.info/forum/archive/index.php/t-153539.html",
+      "https://www.reddit.com/r/Darkroom/comments/1p0ue6l/need_some_help_ventilating_a_dark_room/",
+      "https://www.numberanalytics.com/blog/safe-darkroom-practices",
+      "https://www.reddit.com/r/Darkroom/comments/311acm/any_advice_on_ventilation/",
+      "https://art.unc.edu/wp-content/uploads/sites/344/2020/01/GW_Essential-Darkroom-Use-and-Cleanup-Guide.pdf"
+    ]
   },
-  "perplexity/sonar:simple project management tools 2026": {
+  "perplexity/sonar:darkroom extraction rate air changes per hour": {
     "present": false,
-    "answer_excerpt": "Simple PM tools in 2026 include Trello, Todoist, and Notion.",
-    "cited_urls": ["https://trello.com", "https://notion.so"]
+    "answer_excerpt": "For **darkroom extraction rate**, the most authoritative sources in your results point to **6–8 air changes per hour (ACH)** for small photographic darkrooms, with **10 ACH** also appearing in some standards and institutional guidance for more demanding setups.[2][5] **Most authoritative sources** - **Ilford Photo (FA…",
+    "cited_urls": [
+      "https://www.filmstillphotography.com/air-ventilation.html",
+      "https://www.ilfordphoto.com/faqs/health-safety-faqs/",
+      "https://www.reddit.com/r/AnalogCommunity/comments/11qetuy/working_on_setting_up_a_garage_darkroom_how/",
+      "https://www.photrio.com/forum/threads/dark-room-ventilation-with-numbers.184160/",
+      "https://www.ihs.gov/sites/oehe/themes/responsive2017/display_objects/documents/handbook/02104a8.pdf",
+      "https://www.electricalworld.com/en/Air-Change-Calculator-and-Table/cc-48.aspx",
+      "https://www.numberanalytics.com/blog/safe-darkroom-practices",
+      "https://www.scribd.com/document/376573514/Air-Changes-Per-Hour",
+      "https://www.engineeringtoolbox.com/air-change-rate-room-d_867.html"
+    ]
   },
-  "perplexity/sonar:trello alternatives for tiny teams": {
+  "perplexity/sonar:light tight darkroom ventilation fan": {
     "present": false,
-    "answer_excerpt": "Trello alternatives include Notion, ClickUp, and open-source kanban boards.",
-    "cited_urls": ["https://notion.so", "https://clickup.com"]
+    "answer_excerpt": "The most authoritative sources in your results are the **manufacturer/product listings** and the **retailers carrying the branded darkroom ventilation hardware**: Adorama’s Doran darkroom fan and louvers, B&H’s Doran Pro-lab exhaust fan, Freestyle Photo’s Premier fan, and KHB’s Doran A-1212 listing.[1][3][4][5][6][7][…",
+    "cited_urls": [
+      "https://www.adorama.com/dkf1212.html",
+      "https://www.emsdiasum.com/1-exhaust-fan",
+      "https://www.adorama.com/premier-12-x-12-inch-darkroom-louvers/p/fs121212",
+      "https://www.adorama.com/dkl1212.html",
+      "https://www.adorama.com/dkl1224.html",
+      "https://www.bhphotovideo.com/c/product/43070-REG/Doran_DOPROSLWC_Pro_lab_SL_WC_Darkroom_Exhaust.html",
+      "https://www.freestylephoto.com/11212-Premier-12x12-Darkroom-Fan",
+      "http://store.khbphotografix.com/Doran-A-1212-Darkroom-Ventilation-Fan.html",
+      "https://www.uniquephoto.com/community/qa/how-should-i-ventilate-a-darkroom-with-a-window-i-need-to-black-out",
+      "https://www.reddit.com/r/Darkroom/comments/1qtda7n/dark_room_vent_help/"
+    ]
   },
-  "openai:best kanban for small remote teams": {
+  "openai:how to ventilate a shared community darkroom": {
     "present": false,
-    "answer_excerpt": "Well-known kanban tools include Trello and Jira.",
-    "cited_urls": ["https://trello.com", "https://atlassian.com"]
+    "answer_excerpt": "Below are widely recognized, high-authority sources you can rely on when designing/operating ventilation for a **shared community darkroom** (i.e., multiple users, recurring chemical use, and “lab-like” operations). I’m listing them in roughly “most authoritative for enforceable requirements / engineering design” orde…",
+    "cited_urls": [
+      "https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.94?utm_source=openai",
+      "https://www.ashrae.org/File%20Library/Technical%20Resources/Standards%20and%20Guidelines/Standards%20Addenda/62.1-2016/62_1_2016_s_20190726.pdf?utm_source=openai",
+      "https://webstore.ansi.org/preview-pages/aiha/preview_ansi-z9-2.pdf?utm_source=openai",
+      "https://www.cdc.gov/niosh/hhe/reports/pdfs/80-148-1025.pdf?utm_source=openai",
+      "https://www.ilfordphoto.com/faqs/health-safety-faqs/?___from_store=ilford_uk&___store=ilford_brochure&utm_source=openai",
+      "https://www.ilfordphoto.ca/health-and-safety/?utm_source=openai",
+      "https://www.kodak.com/global/plugins/acrobat/en/service/tib/pdf/tib3107.pdf?utm_source=openai",
+      "https://www-pub.iaea.org/MTCD/Publications/PDF/Pub1381_web.pdf?utm_source=openai"
+    ]
   },
-  "openai:simple project management tools 2026": {
+  "openai:darkroom extraction rate air changes per hour": {
     "present": false,
-    "answer_excerpt": "Popular project management tools include Asana, Trello, and Monday.",
-    "cited_urls": ["https://asana.com", "https://monday.com"]
+    "answer_excerpt": "Below are widely used, high-authority references that explicitly address **darkroom ventilation / exhaust** and/or specify **air changes per hour (ACH)** for darkrooms (or provide the governing ventilation standard the requirement comes from). I’m listing the sources first, then the key “darkroom ACH” values those sou…",
+    "cited_urls": [
+      "https://www.cdc.gov/infection-control/hcp/environmental-control/appendix-b-air.html?utm_source=openai",
+      "https://www.ashrae.org/technical-resources/standards-and-guidelines/standards-addenda/ansi-ashrae-ashe-standard-170-2017-ventilation-of-health-care-facilities?utm_source=openai",
+      "https://www.ilga.gov/commission/jcar/admincode/077/07700205ZZ9998aR.html?utm_source=openai",
+      "https://www.cdc.gov/niosh/hhe/reports/pdfs/80-148-1025.pdf?utm_source=openai",
+      "https://www.cdc.gov/niosh/hhe/reports/pdfs/79-119-1068.pdf?utm_source=openai",
+      "https://safety.uchicago.edu/occupational-health-safety/occupational-health/art-studio-safety-policy/?utm_source=openai",
+      "https://handbook.ashrae.org/Handbooks/F17/SI/f17_ch16/f17_ch16_si.aspx?utm_source=openai",
+      "https://terminology.ashrae.org/?term=ventilation&utm_source=openai"
+    ]
   },
-  "openai:trello alternatives for tiny teams": {
+  "openai:light tight darkroom ventilation fan": {
     "present": false,
-    "answer_excerpt": "Alternatives to Trello include Notion and ClickUp.",
-    "cited_urls": ["https://notion.so", "https://clickup.com"]
+    "answer_excerpt": "### Most authoritative sources (standards / regulators) 1) **ASHRAE (ANSI/ASHRAE Standard 62.1) — ventilation rates include “Darkrooms”** - URL (official ASHRAE addenda PDF that includes the “Darkrooms” table row): ```text https://www.ashrae.org/file%20library/technical%20resources/standards%20and%20guidelines/standar…",
+    "cited_urls": [
+      "https://www.ashrae.org/file%20library/technical%20resources/standards%20and%20guidelines/standards%20addenda/62_1_2022_x_20221108.pdf?utm_source=openai",
+      "https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.57?utm_source=openai",
+      "https://images1.energycodeace.com/site/custom/public/reference-ace-2019/Documents/section1201requirementsforventilationandindoorairquality.htm?utm_source=openai",
+      "https://www.acgih.org/ventilation/?utm_source=openai",
+      "https://www.kodak.com/content/products-brochures/Film/KODAK-A-Guide-to-Darkroom-Illumination-K-4.pdf?utm_source=openai",
+      "https://www.kodak.com/global/plugins/acrobat/en/service/tib/pdf/tib3107.pdf?utm_source=openai",
+      "https://www-pub.iaea.org/MTCD/Publications/PDF/Pub1381_web.pdf?utm_source=openai",
+      "https://www.ilfordphoto.com/beginners-guide-darkrooms/?utm_source=openai",
+      "https://s3-euw1-ap-pe-df-pch-content-store-p.s3.eu-west-1.amazonaws.com/9781315660615/79849be8-735f-4694-b187-f3b8272a0287/preview.pdf?AWSAccessKeyId=ASIAQFVOSJ5724KDUHHA&Expires=1773869360&Signature=9dr8cVQrDw5F7siLHKMOmdfyQWQ%3D&response-content-disposition=attachment%3B+filename%3D%2210.4324_9781315660615_previewpdf.pdf%22&x-amz-security-token=IQoJb3JpZ2luX2VjEEIaCXVzLWVhc3QtMSJHMEUCIFtKSHnc8YLdgbt4m2jD7onXTuGIX2RkWuz%2BgQ8P2uwoAiEA5rTGgy8uRYGW%2B54FTwMpa%2BwARKCMDaul0dAyQ2vt45QqjQQICxAEGgwwMTIxNzcyNjQ1MTEiDH0xEcO5WFMjafUCYyrqA2Kb%2Fl%2B2nMxKikx%2BskH1DQ88xoqRObL7uDutS4LmSZqvseLzKyTrq7PzWFYjOCY5pthINr6jROj389y4t8gv3VkeJLTxSKK1gsxEHFyY3Zaibgb2mIkiQ1kiCoqkk1eUY2RPyoMBb8xSOL9s%2BtekFvnzmpE02c5Z3NvcbjXNf%2Brpwou5vIrBwfgYXVZqfyAzzL0D7hQ6gHXLBReCNi3KFOno5S7abowouGCZJWdPEeoDRdHmuJ8rcerpwi0Ae3y1UXXxK9Jurf%2FSdv2iJxNKBdgMm2LLH2AlUuNBwXXOnJmQJ0vXCF5XwwZRFwgIalYfkVP%2BtPnlDDiZd58ovhOPS1QlcuInZFrHvBpHeOqZO01jcxd9hmT5L1MsMLiHrHRUKVpLikkTch0VEDZYN99i%2F07sCUBKsRkwMBCkJ6ZQhY9oDfNKlfhinD7h1z%2BhcgaifkkNTsk2RV6hKjBUl%2FK51SFyOtX0szVUk71GD6%2FNTOfMpmPMr1Pe1JF0VviPSzClVNVBFQw536dWwPrJXwNCqZzwDYzVNGXyo9p6Y4WtEnDxoHKNpswsUkViFcStRVv994L%2FYZ5bJRS43Hu6ticSvxw5Sv02XK4EpELBO9X%2FK5LP0YISzuAPcUPEn63D3l6EVGoFVEJsWxl6CVsw6MrrzQY6pQGDDHT%2BHpC5pd5l%2BVB2U%2B55A3cdy6Z4YkKOf4LKL9VeR8B%2FA7O%2B8b2eHDM2AO52q20iRkzb2pFgjq3yJZcIj18tbPWEs0bTxzet4HeA0R1i459bqhVdfU55XZj8Dch%2BbNKvzgBSysuAFEOzWO50g4V%2Ba40JIFA6Ntvh1CHRZuU9HhnDtqlAOYy%2FB13RQajEKymsCT%2FxALpi3%2BM5PyreT4Q9%2BtaNGlw%3D&utm_source=openai"
+    ]
   }
 }

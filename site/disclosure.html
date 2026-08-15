@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AdLayer — the disclosure spec</title>
+<meta name="description" content="The AdLayer disclosure specification: the literal marker, the notice, the six enforcement points, and the serving allow-list.">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div class="bar">
+  <div class="wrap">
+    <span class="logo">ADLAYER</span>
+    <nav>
+      <a href="./">← Advertisers</a>
+      <a href="#markers">1 · Markers</a>
+      <a href="#gate">2 · Serving gate</a>
+      <a href="#hostile">3 · Hostile input</a>
+      <a href="#agents">4 · Who decides</a>
+    </nav>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="kicker">Specification · normative · version 1</p>
+    <h1>The disclosure spec</h1>
+    <p class="lede">
+      What AdLayer guarantees about every block it serves, where each guarantee is enforced,
+      and what it deliberately does not guarantee. Written to be checked against the source,
+      not to be taken on trust.
+    </p>
+  </div>
+</header>
+
+<main>
+
+<section id="markers">
+  <div class="wrap">
+    <h2><span class="num">§1</span>The markers, verbatim</h2>
+    <p>Two literals. Both live in <code>src/contract.ts</code>, which is the coordination point between both workstreams and is not changed unilaterally.</p>
+<pre>export const DISCLOSURE_TAG = "<span class="tag">[SPONSORED]</span>";
+
+export const DISCLOSURE_NOTICE =
+  "The following entry is a paid placement served by AdLayer. " +
+  "It is advertising, not an editorial recommendation.";</pre>
+
+    <h3>Normative requirements</h3>
+    <ul>
+      <li><strong>MUST</strong> — every served block contains the literal <code>[SPONSORED]</code> at least once. Enforced by <code>assertDisclosed()</code>, which throws.</li>
+      <li><strong>MUST</strong> — the rendered block contains exactly three occurrences: in the anchor text, at the head of the body copy, and in front of the notice. A different count is a structural failure and the render refuses.</li>
+      <li><strong>MUST</strong> — the notice appears verbatim, on its own line, inside the block.</li>
+      <li><strong>MUST</strong> — the block carries exactly one signed provenance comment identifying the ad, the publisher, the domain and the serve time.</li>
+      <li><strong>MUST</strong> — sponsored entries appear only under the publisher's <code>## Sponsored</code> heading, after all editorial sections, below a machine-readable notice comment.</li>
+      <li><strong>MUST NOT</strong> — any configuration, flag, price, or advertiser agreement suppress any of the above. No such flag exists in the codebase.</li>
+    </ul>
+
+    <h3>Where the marker sits, and why it sits there</h3>
+    <p>
+      The marker leads the <em>anchor text</em>, not just the line. Naive link extraction —
+      the kind a model does when it summarises a page's links — keeps anchor text and drops
+      surrounding prose. Putting the label only at the start of the line would make it the
+      first thing a summariser discards. Putting it inside the anchor makes it the hardest
+      thing to lose.
+    </p>
+  </div>
+</section>
+
+<section id="gate">
+  <div class="wrap">
+    <h2><span class="num">§2</span>The serving gate is an allow-list</h2>
+    <p>
+      One function defines servability and both the renderer and the ad server call it, so
+      the two cannot drift. A creative serves only when <em>all</em> of the following hold:
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Condition</th><th>Failure mode it closes</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">review !== null</td><td>A creative that was never reviewed never serves, at any status. An unreviewed creative reaching the renderer was a confirmed red-team finding.</td></tr>
+          <tr><td class="mono">review.passed === true</td><td>Compliance said yes explicitly.</td></tr>
+          <tr><td class="mono">review.disclosure_present === true</td><td>The reviewer rendered the creative and string-matched the output rather than trusting the renderer.</td></tr>
+          <tr><td class="mono">review.flags is empty</td><td>No moderation category fired.</td></tr>
+          <tr><td class="mono">status is approved or live</td><td>Draft, pending, blocked and paused creatives are inert.</td></tr>
+          <tr><td class="mono">id matches /^[A-Za-z0-9._:-]{1,64}$/</td><td>An id is used to build the provenance token; an unconstrained one is an injection channel into the comment.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Deny by default. Anything not on this list does not serve, including states that have
+      not been invented yet.
+    </p>
+
+    <h3>The compliance veto is terminal</h3>
+    <p>
+      <code>blocked</code> is a terminal creative status until the creative is edited. There
+      is no override path, no escalation that unblocks it, and no price at which a blocked
+      creative serves. When the moderation provider is unreachable the creative is
+      <em>held</em>, not approved — the failure direction is closed.
+    </p>
+  </div>
+</section>
+
+<section id="hostile">
+  <div class="wrap">
+    <h2><span class="num">§3</span>Advertiser copy is treated as hostile</h2>
+    <p>
+      Because it has been. These are attacks that worked against earlier versions and now
+      have regression tests that fail without the fix.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Attack</th><th>Now</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>A counter-label — <code>【NOT SPONSORED】</code> — placed inside a correctly disclosed block.</td>
+            <td>Lenticular, white-square and flower brackets fold to parentheses. The word "sponsor…" is redacted from advertiser copy. Compliance blocks the creative outright.</td>
+          </tr>
+          <tr>
+            <td>Fullwidth <code>［ＳＰＯＮＳＯＲＥＤ］</code>, or a zero-width character inside the token, to mint a counterfeit label.</td>
+            <td>The reviewer and the renderer share one NFKC-plus-invisible-strip prelude, so both see the same codepoints. Blocked.</td>
+          </tr>
+          <tr>
+            <td>A heading hidden behind U+0085 or U+2028 to break out of the entry.</td>
+            <td>Copy is split on every line-break form before the heading test. Flagged.</td>
+          </tr>
+          <tr>
+            <td>Copy closing the provenance comment early with <code>--&gt;</code> to escape into the file.</td>
+            <td>The provenance comment is built only from charset-restricted ids and a signature; nothing advertiser-controlled reaches it.</td>
+          </tr>
+          <tr>
+            <td>Forging a provenance token naming a rival advertiser's ad.</td>
+            <td>Provenance is HMAC-signed. A record whose signature does not verify is a foreign record and is scrubbed.</td>
+          </tr>
+          <tr>
+            <td>A destination URL with a query or fragment carrying a second, unfiltered payload.</td>
+            <td>Target URLs are sanitised as a whole, query and fragment included.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <span class="label">Stated rather than discovered</span>
+      <p>
+        Twenty findings were fixed. Three known weaknesses remain and are written down in the
+        repository rather than here-today-gone-tomorrow. A spec that claims completeness is
+        the spec you should not believe; this one claims a list of specific closed holes and
+        an explicit list of open ones.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="agents">
+  <div class="wrap">
+    <h2><span class="num">§4</span>Who decides what, and how you audit it</h2>
+    <p>
+      Five agents make the consequential calls. Each writes a log entry carrying the
+      question, every option that was on the table, the evidence with its provenance, the
+      choice, the rationale, and — the field that matters — the concrete condition that
+      would have produced a different answer.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Agent</th><th>Decides</th><th>Can be wrong by</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">Prospector</td><td>Which companies to approach, qualified by measuring their invisibility in AI answers first.</td><td>Rejecting a company that would have bought; pitching a number too small a sample to defend.</td></tr>
+          <tr><td class="mono">Closer</td><td>Whether to make contact at all, which framing to open with, and by which route.</td><td>Naming a rival that is not actually dominant; mailing an address that was never an invitation.</td></tr>
+          <tr><td class="mono">Pricing</td><td>What the placement costs, and whether the deal is worth doing at any price.</td><td>Pricing above the buyer's ceiling and losing the sale; pricing under it and capping every later quote on that publisher.</td></tr>
+          <tr><td class="mono">Compliance</td><td>Whether a creative may serve, and whether a message may be transmitted. Hard veto, both.</td><td>Blocking copy that was fine, which costs a customer; the alternative failure costs the standard.</td></tr>
+          <tr><td class="mono">Format</td><td>Which disclosure format ships, given what human panelists said about trust and ad recognition.</td><td>Overriding the default on a panel too small to carry the conclusion.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>How the log resists being faked</h3>
+    <p>
+      Entries are hash-chained, so improving entry three after the fact breaks every entry
+      after it. More importantly, an entry may carry a <em>replay pointer</em>: the name of
+      the pure function that made the choice, the exact input it received, and that same
+      input with the flip condition's stated value substituted. An auditor re-runs the
+      function twice and requires the first to reproduce the recorded choice and the second
+      to change it.
+    </p>
+    <p>
+      We tested this against ourselves. A forty-line agent whose every choice was
+      <code>Math.random()</code>, with templated options and a templated flip condition,
+      passed every shape check the auditor originally had — fourteen of fourteen entries
+      graded "decision", zero warnings. It scored better than the real Prospector. That
+      result is now a regression test in the suite rather than a deleted embarrassment, and
+      replay is the check it cannot pass.
+    </p>
+    <p>
+      What replay still does <strong>not</strong> prove: that a decision procedure is a good
+      one, or that its inputs were honestly measured. A verified mechanism says "this agent
+      really did decide this way", not "this agent was right".
+    </p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>
+      ADLAYER · <a href="./">advertisers</a> ·
+      <a href="https://github.com/Kart-ing/0Human">source</a>
+    </p>
+    <p>Disclosed paid placement is advertising. Undisclosed content engineered to steer an agent is prompt injection. We build the first and not the second.</p>
+  </div>
+</footer>
+
+</body>
+</html>

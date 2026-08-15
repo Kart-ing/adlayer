@@ -1,0 +1,49 @@
+# AdLayer advertiser site — Render Blueprint (SITE SCOPE ONLY)
+#
+# Render reads Blueprints from render.yaml at the REPOSITORY ROOT. This file
+# lives at site/render.yaml because that is the scope this workstream owns, and
+# the root render.yaml belongs to someone else. To deploy, MERGE the single
+# `services:` entry below into the root render.yaml — do not overwrite it.
+#
+# Or, faster, create it by hand in the Render dashboard:
+#   New → Static Site → repo → Root Directory: site
+#   Build Command: sh ./build.sh      Publish Directory: .
+#
+# THE PAYMENT LINK. index.html ships with the literal placeholder
+# `__STRIPE_PAYMENT_LINK__`, which renders as an explicit, clearly-marked
+# "payment link not configured" state. `build.sh` substitutes it only when
+# STRIPE_PAYMENT_LINK is set in the environment. With no variable there is no
+# build output difference and no fake checkout button — the page never claims a
+# success it cannot deliver. Set STRIPE_PAYMENT_LINK in the Render dashboard
+# (Environment → Add) rather than committing it.
+
+services:
+  - type: web
+    runtime: static
+    name: adlayer-site
+    rootDir: site
+    staticPublishPath: .
+    # Two lines of sed. Not a framework, not a bundler — the page is fully
+    # functional without it, in the unconfigured state.
+    buildCommand: "sh ./build.sh"
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: STRIPE_PAYMENT_LINK
+        sync: false
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /*
+        name: X-Robots-Tag
+        value: all
+      - path: /robots.txt
+        name: Content-Type
+        value: text/plain; charset=utf-8
+    routes:
+      - type: rewrite
+        source: /disclosure
+        destination: /disclosure.html

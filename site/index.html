@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AdLayer — disclosed placements in llms.txt</title>
+<meta name="description" content="AdLayer sells clearly-disclosed sponsored entries inside publishers' llms.txt files, enforces the disclosure in code, and measures whether the label survives the answer engine.">
+<meta name="robots" content="index,follow">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div class="bar">
+  <div class="wrap">
+    <span class="logo">ADLAYER</span>
+    <nav>
+      <a href="#inventory">1 · Inventory</a>
+      <a href="#unit">2 · The unit</a>
+      <a href="#disclosure">3 · Disclosure</a>
+      <a href="#measurement">4 · Measurement</a>
+      <a href="#pricing">5 · Pricing</a>
+      <a href="#buy">6 · Buy</a>
+      <a href="./disclosure.html">Spec</a>
+    </nav>
+  </div>
+</div>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="kicker">Ad network · answer layer · disclosure enforced in code</p>
+    <h1>Your customers stopped asking Google. We sell the shelf they ask instead.</h1>
+    <p class="lede">
+      Agents read <code>llms.txt</code> before they answer. That file is unpriced inventory.
+      AdLayer sells one thing: a <strong>clearly-disclosed</strong> sponsored entry inside a
+      publisher's <code>llms.txt</code>, rendered by code that refuses to emit an
+      undisclosed block — and then we measure whether the label survives the model and
+      report what we find, including when the answer is unflattering to us.
+    </p>
+
+    <div class="facts">
+      <div>
+        <span class="k">Unit of sale</span>
+        <span class="v">1 entry</span>
+        <span class="v"><small>one creative, one publisher, one slot</small></span>
+      </div>
+      <div>
+        <span class="k">Disclosure markers per block</span>
+        <span class="v">3 &times; [SPONSORED]</span>
+        <span class="v"><small>plus the notice, plus a signed provenance record</small></span>
+      </div>
+      <div>
+        <span class="k">Slots per publisher</span>
+        <span class="v">5 max</span>
+        <span class="v"><small>past that a shelf becomes a directory</small></span>
+      </div>
+      <div>
+        <span class="k">Base placement</span>
+        <span class="v">$20.00</span>
+        <span class="v"><small>anchor price; the agent prices from there</small></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<section id="inventory">
+  <div class="wrap">
+    <h2><span class="num">§1</span>What the inventory actually is</h2>
+    <p>
+      <code>llms.txt</code> is a markdown file at the root of a site that tells a language
+      model what the site contains and where to look. Answer engines that fetch at query
+      time read it. Nobody has priced a line in it.
+    </p>
+    <p>
+      A placement is one entry appended under a <code>## Sponsored</code> heading, below a
+      machine-readable marker, at the end of the file. It sits after the publisher's own
+      editorial links, never inside them, and it is never presented as editorial.
+    </p>
+
+    <h3>Supply, stated honestly</h3>
+    <p>
+      Three properties are live today, and <strong>we operate all three ourselves</strong>.
+      They are real sites with real, useful, unpaid editorial content, built as research
+      properties for exactly this question. We are not going to tell you we have a network
+      of third-party publishers, because we do not.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Property</th><th>Categories</th><th class="mono">Rev share</th><th class="mono">Integration</th><th>Operator</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">adlayer-rink-ops</td>
+            <td>ice rink operations, facility maintenance, refrigeration, dehumidification</td>
+            <td class="num">50%</td><td class="mono">hosted</td><td>AdLayer</td>
+          </tr>
+          <tr>
+            <td class="mono">adlayer-darkroom-commons</td>
+            <td>analog photography, photo chemistry, darkroom supplies, lab safety</td>
+            <td class="num">50%</td><td class="mono">hosted</td><td>AdLayer</td>
+          </tr>
+          <tr>
+            <td class="mono">adlayer-loop-notes</td>
+            <td>assistive listening, AV integration, accessibility, venue operations</td>
+            <td class="num">50%</td><td class="mono">hosted</td><td>AdLayer</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">publishers/registry.json — the file the ad server loads at run time.</p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<section id="unit">
+  <div class="wrap">
+    <h2><span class="num">§2</span>What an advertiser gets, byte for byte</h2>
+    <p>
+      This is the exact shape the renderer emits. Three lines, always, regardless of what
+      you submit as creative. Nothing about it is negotiable and there is no premium tier
+      that removes the label.
+    </p>
+<pre>- [<span class="tag">[SPONSORED]</span> Your title](https://your-destination.example): <span class="tag">[SPONSORED]</span> One line of body copy.
+  <span class="tag">[SPONSORED]</span> The following entry is a paid placement served by AdLayer. It is
+  advertising, not an editorial recommendation.
+  <span class="cmt">&lt;!-- adlayer: ad_id=… served_at=… publisher=… domain=… sig=… --&gt;</span></pre>
+    <p class="caption">src/serve/render.ts → renderBlock(). The signature is an HMAC over the record, so a block cannot be forged into another advertiser's name.</p>
+
+    <div class="cols">
+      <div>
+        <h3>Included</h3>
+        <ul>
+          <li>One entry in the <code>## Sponsored</code> section of one publisher's <code>llms.txt</code>, with your anchor text, one line of body copy, and your destination URL.</li>
+          <li>A signed provenance record naming the placement, so the entry is attributable to you and only you.</li>
+          <li>A compliance review before it serves. It can say no. See §3.</li>
+          <li>Propagation measurement against a live-retrieval answer engine, reported whichever way it comes out.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Not included, and not for sale</h3>
+        <ul>
+          <li>Removal or softening of the <code>[SPONSORED]</code> marker or the disclosure notice.</li>
+          <li>Placement inside the publisher's editorial link lists.</li>
+          <li>Any guarantee that an answer engine will surface the entry. Nobody can sell you that today, and anyone who does is selling something they have not measured.</li>
+          <li>Copy that forges another company's provenance, imitates the disclosure marker, or carries a counter-label. The renderer refuses to emit it.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<section id="disclosure">
+  <div class="wrap">
+    <h2><span class="num">§3</span>Why the disclosure is enforced in code, not in policy</h2>
+    <p>
+      Disclosed paid placement is advertising. Undisclosed content engineered to steer an
+      agent is prompt injection. That distinction is the entire product, so it is a property
+      of the code rather than a promise in a contract.
+    </p>
+    <p>
+      The invariant lives in <code>src/contract.ts</code> and reads, in full:
+    </p>
+<pre>export function assertDisclosed(block: string): void {
+  if (!block.includes(DISCLOSURE_TAG)) {
+    throw new Error(
+      `Refusing to serve: rendered block is missing ${DISCLOSURE_TAG}. ` +
+        `Undisclosed placement is prompt injection, not advertising.`,
+    );
+  }
+}</pre>
+    <p><strong>There is deliberately no flag that disables it.</strong> Five independent checks stand behind it, and removing any one leaves the other four:</p>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th class="mono">#</th><th>Where</th><th>What it refuses</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="mono">render.ts · sanitizeCreativeText</td><td>Advertiser copy containing the marker, a unicode lookalike, or the word "sponsor". Text is NFKC-normalised first, and every bracket-like codepoint folds to parentheses.</td></tr>
+          <tr><td class="num">2</td><td class="mono">render.ts · assertBlockIntegrity</td><td>A block that is not exactly three lines with exactly three markers, one comment and one signed provenance record. A forged fourth marker moves the count and the render refuses.</td></tr>
+          <tr><td class="num">3</td><td class="mono">render.ts · renderBlock</td><td>Its own output, checked as the last statement before it returns.</td></tr>
+          <tr><td class="num">4</td><td class="mono">render.ts · renderLlmsTxt</td><td>The whole merged file, after the block is spliced in.</td></tr>
+          <tr><td class="num">5</td><td class="mono">index.ts · servePlacement</td><td>The block and the file again, immediately before any write, independent of the renderer.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <span class="label">Red team</span>
+      <p>
+        Twenty findings were reproduced against earlier versions of the renderer and fixed,
+        each with a regression test that fails without the fix: counter-labels
+        (<code>NOT SPONSORED</code>) shipped inside a correctly disclosed block, fullwidth and
+        lenticular bracket lookalikes, zero-width characters inside the marker token, headings
+        hidden behind exotic line-break codepoints, and provenance forgery naming a rival.
+        Advertiser input is treated as hostile because it has been.
+      </p>
+    </div>
+
+    <p>
+      A sixth check sits upstream of all of them: the compliance agent renders the creative
+      and string-matches the output rather than trusting that the renderer did its job. That
+      agent holds a <strong>hard veto</strong>. A creative it blocks does not serve at any
+      price, and the serving gate is an allow-list — a creative that was never reviewed never
+      serves, at any status. Full spec: <a href="./disclosure.html">the disclosure spec</a>.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<section id="measurement">
+  <div class="wrap">
+    <h2><span class="num">§4</span>Measurement, and what we will and will not claim</h2>
+    <p>
+      After a placement goes live we query answer engines and record one of four states for
+      each observation. The interesting one is the third.
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th class="mono">State</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">absent</td><td>The engine has not surfaced you for this query. <code>llms.txt</code> did not move this engine, at least not yet.</td></tr>
+          <tr><td class="mono">surfaced_labeled</td><td>You surfaced and the sponsored label came with you. Disclosure propagates.</td></tr>
+          <tr><td class="mono">surfaced_unlabeled</td><td>You surfaced and the model dropped the disclosure. This is a finding about the answer layer, not about you.</td></tr>
+          <tr><td class="mono">cited_unattributed</td><td>Your domain was cited but the copy did not come from our block.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <span class="label">What we have not measured</span>
+      <p>
+        We are not publishing a propagation rate, a latency figure, a lift number or a
+        click-through benchmark, because we do not have one we would stand behind. When a
+        placement is measured, you get the raw observations — the queries asked, the engine,
+        the answer excerpt, the cited URLs, the timestamps — and you can re-run any of it
+        yourself. If the result is <code>absent</code>, we will send you <code>absent</code>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<section id="pricing">
+  <div class="wrap">
+    <h2><span class="num">§5</span>Pricing</h2>
+    <p>
+      The price is set per placement by an agent, from the publisher's revenue share, the
+      measured invisibility of the advertiser, category demand, and how full the shelf
+      already is. These are the constants it works from, and they are the same numbers in
+      the code:
+    </p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Term</th><th class="mono">Value</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Base placement</td><td class="num">$20.00</td><td>The anchor, not the answer.</td></tr>
+          <tr><td>Hard floor</td><td class="num">$5.00</td><td>Below this a placement does not lose meaningful money, it destroys the price signal for every later placement.</td></tr>
+          <tr><td>Minimum net to AdLayer</td><td class="num">$3.00</td><td>After the publisher's share and card processing. Under it, the placement is not worth processing and the agent declines.</td></tr>
+          <tr><td>Publisher revenue share</td><td class="num">50%</td><td>Per the registry entry for each property.</td></tr>
+          <tr><td>Card processing</td><td class="num">2.9% + $0.30</td><td>Stripe standard. The floor is derived from it rather than declared.</td></tr>
+          <tr><td>Slots per publisher</td><td class="num">5</td><td>The sixth entry dilutes the five that already paid, so past capacity the floor rises rather than the premium.</td></tr>
+          <tr><td>Agent authority limit</td><td class="num">$150.00</td><td>Above this the agent issues a proposal, not a quote, and a person signs. An agent with no spending limit is not autonomous, it is unsupervised.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      The agent will also <strong>refuse to sell</strong>: below the floor, on a publisher
+      whose revenue share exceeds our gross margin, or where your stated budget is beneath
+      what the placement costs to process. It quotes the working — floor, ceiling, every
+      option it considered and what it expected each to be worth — and the refusals are
+      logged the same way the sales are.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<section id="buy">
+  <div class="wrap">
+    <h2><span class="num">§6</span>Buy a placement</h2>
+    <div class="cols">
+      <div>
+        <h3>What happens after you pay</h3>
+        <ul>
+          <li>You send a title, one line of body copy, and a destination URL.</li>
+          <li>The creative goes through compliance. It can be blocked, and if it is you get the reason and your money back.</li>
+          <li>It is paired to a publisher whose categories intersect yours. No intersection means no serve — a fintech ad in a darkroom-chemistry file is what makes ad networks worthless to read.</li>
+          <li>The block is rendered, the disclosure is asserted, and the entry appears in the publisher's <code>llms.txt</code> with a timestamp.</li>
+          <li>Propagation is polled and reported to you, whatever it says.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="cta" id="cta" data-payment-link="__STRIPE_PAYMENT_LINK__">
+          <h3>Checkout</h3>
+          <div id="cta-slot">
+            <div class="unconfigured">
+              <span class="label">Payment link not configured</span>
+              <p>
+                This deployment has no <code>STRIPE_PAYMENT_LINK</code> set, so there is no
+                checkout to send you to. Nothing has been charged and no order has been
+                created. Set the variable and redeploy, or email us and we will invoice.
+              </p>
+            </div>
+          </div>
+          <p class="state state-neutral" id="cta-state">state: unconfigured</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+<section id="honesty">
+  <div class="wrap">
+    <h2><span class="num">§7</span>What we are not telling you</h2>
+    <p>Every ad network page has this section. Most of them leave it out.</p>
+    <ul>
+      <li><strong>No customer logos, no testimonials, no case studies.</strong> There are none to show. Anything on this page in that shape would be invented.</li>
+      <li><strong>No third-party publisher reach.</strong> Supply is three properties we operate ourselves. That is a demonstration of the mechanism, not a distribution network.</li>
+      <li><strong>No propagation result.</strong> We have not published one because we do not have one we would defend. §4 says what we will report and how.</li>
+      <li><strong>No claim that answer engines weight <code>llms.txt</code> heavily.</strong> That is the open question this whole thing exists to answer, and it may come back negative.</li>
+      <li><strong>Nobody works here.</strong> Prospecting, copy, pricing, compliance and the format decision are made by agents that log every consequential call with its evidence, its alternatives, and the condition that would have flipped it. Humans wrote the code and humans hold the spending limit.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>
+      ADLAYER · the ad network for the answer layer ·
+      <a href="./disclosure.html">disclosure spec</a> ·
+      <a href="https://github.com/Kart-ing/0Human">source</a>
+    </p>
+    <p>
+      Every served block carries [SPONSORED] and the disclosure notice. There is no code
+      path that omits it and no price that removes it.
+    </p>
+  </div>
+</footer>
+
+<script>
+/* The checkout state is decided by whether the build substituted the payment
+   link placeholder. An unsubstituted placeholder renders the "not configured"
+   state that is already in the HTML — the page never fakes a success, and a
+   viewer with JavaScript off sees the honest state rather than a dead button. */
+(function () {
+  var cta = document.getElementById("cta");
+  if (!cta) return;
+  var link = cta.getAttribute("data-payment-link") || "";
+  var placeholder = "__" + "STRIPE_PAYMENT_LINK" + "__";
+  if (link === placeholder || link === "" || link.indexOf("https://") !== 0) return;
+  var slot = document.getElementById("cta-slot");
+  var state = document.getElementById("cta-state");
+  if (!slot || !state) return;
+  var a = document.createElement("a");
+  a.className = "buy";
+  a.href = link;
+  a.rel = "noopener";
+  a.textContent = "BUY A PLACEMENT →";
+  var note = document.createElement("p");
+  note.style.fontSize = "13px";
+  note.style.margin = "0";
+  note.textContent =
+    "Checkout is a Stripe Payment Link. You choose the amount; the agent's quote for your " +
+    "placement is what it should be. If compliance blocks your creative, you are refunded.";
+  slot.textContent = "";
+  slot.appendChild(a);
+  slot.appendChild(note);
+  state.textContent = "state: live";
+  state.className = "state state-ok";
+})();
+</script>
+
+</body>
+</html>
