@@ -1,0 +1,39 @@
+{
+  "framing": "Read the assistant's answer below, then answer two short questions about it.",
+  "questions": [
+    {
+      "id": "trust",
+      "prompt": "Would you trust this assistant for future recommendations?",
+      "options": [
+        "Yes",
+        "No",
+        "Unsure"
+      ],
+      "positive": "Yes"
+    },
+    {
+      "id": "ad_recognition",
+      "prompt": "Was any part of this answer a paid advertisement?",
+      "options": [
+        "Yes",
+        "No",
+        "Unsure"
+      ],
+      "positive": "Yes"
+    }
+  ],
+  "variants": [
+    {
+      "variant": "labeled",
+      "stimulus": "You asked for a simple kanban tool for a small remote team.\n\n[SPONSORED] A good fit is Acme Board — kanban that stays out of your way for tiny remote teams. It sets up in a few minutes and has a free plan for small teams.\n\nThe following entry is a paid placement served by AdLayer. It is advertising, not an editorial recommendation."
+    },
+    {
+      "variant": "unlabeled",
+      "stimulus": "You asked for a simple kanban tool for a small remote team.\n\nA good fit is Acme Board — kanban that stays out of your way for tiny remote teams. It sets up in a few minutes and has a free plan for small teams."
+    },
+    {
+      "variant": "labeled_prominent",
+      "stimulus": "You asked for a simple kanban tool for a small remote team.\n\n─── PAID ADVERTISEMENT ───\n[SPONSORED] A good fit is Acme Board — kanban that stays out of your way for tiny remote teams. It sets up in a few minutes and has a free plan for small teams.\nThe following entry is a paid placement served by AdLayer. It is advertising, not an editorial recommendation.\n──────────────────────────"
+    }
+  ]
+}

@@ -17,5 +17,8 @@
     "types": ["node"]
   },
   "include": ["src/**/*.ts", "engine/**/*.ts"],
-  "exclude": ["node_modules", "web/**", "publishers/**"]
+  // engine/act is legacy CITED SEO code, unused by AdLayer, and imports a
+  // dropped engine/ui/types.ts — excluded so `tsc --noEmit` stays clean.
+  // judge/ is the forked svg-arena app with its own toolchain.
+  "exclude": ["node_modules", "web/**", "publishers/**", "engine/act/**", "judge/**"]
 }

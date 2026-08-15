@@ -117,11 +117,11 @@ function parseMeta(html: string): ScrapeResult {
 
   let category = "";
   if (keywords.size) {
-    category = [...keywords][0];
+    category = [...keywords][0] ?? "";
   } else if (title) {
     category = cleanTitle(title);
   } else if (description) {
-    category = description.split(/[.,]/)[0].trim();
+    category = (description.split(/[.,]/)[0] ?? "").trim();
   }
 
   return { category: category.toLowerCase(), keywords: [...keywords] };
@@ -129,7 +129,7 @@ function parseMeta(html: string): ScrapeResult {
 
 function readTitle(html: string): string | null {
   const m = html.match(/<title[^>]*>([^<]*)<\/title>/i);
-  return m ? decodeEntities(m[1].trim()) : null;
+  return m ? decodeEntities((m[1] ?? "").trim()) : null;
 }
 
 function readMeta(html: string, name: string): string | null {
@@ -137,9 +137,9 @@ function readMeta(html: string, name: string): string | null {
   const attr = `(?:name|property)=["']${escapeRe(name)}["']`;
   const content = `content=["']([^"']*)["']`;
   const forward = html.match(new RegExp(`<meta[^>]+${attr}[^>]*${content}`, "i"));
-  if (forward) return decodeEntities(forward[1].trim());
+  if (forward) return decodeEntities((forward[1] ?? "").trim());
   const backward = html.match(new RegExp(`<meta[^>]+${content}[^>]*${attr}`, "i"));
-  return backward ? decodeEntities(backward[1].trim()) : null;
+  return backward ? decodeEntities((backward[1] ?? "").trim()) : null;
 }
 
 /** Take the descriptive segment of a title, dropping a leading brand name. */

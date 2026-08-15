@@ -1,0 +1,233 @@
+{
+  "_fixture": true,
+  "_note": "FIXTURE AdLayerState \u2014 renders the app with zero env vars. Propagation and Terac values mirror the offline demos in src/prove. Replace with live state on a real run.",
+  "publishers": [
+    {
+      "id": "pub_pmweekly",
+      "domain": "pmweekly.example",
+      "integration": "cited_generated",
+      "categories": [
+        "project management",
+        "productivity"
+      ],
+      "rev_share": 0.3,
+      "verified_at": "2026-08-15T12:30:00.000Z"
+    }
+  ],
+  "advertisers": [
+    {
+      "id": "adv_acme",
+      "name": "Acme Board",
+      "url": "https://acme.example",
+      "categories": [
+        "project management",
+        "kanban"
+      ],
+      "stripe_customer_ref": "cus_demo_acme"
+    },
+    {
+      "id": "adv_bright",
+      "name": "Brightpath Docs",
+      "url": "https://brightpath.example",
+      "categories": [
+        "documentation",
+        "productivity"
+      ],
+      "stripe_customer_ref": null
+    },
+    {
+      "id": "adv_edge",
+      "name": "EdgeCRM",
+      "url": "https://edgecrm.example",
+      "categories": [
+        "crm",
+        "sales"
+      ],
+      "stripe_customer_ref": null
+    }
+  ],
+  "creatives": [
+    {
+      "id": "cr_acme_01",
+      "advertiser_id": "adv_acme",
+      "title": "Acme Board",
+      "body": "Kanban that stays out of your way for tiny remote teams.",
+      "target_url": "https://acme.example",
+      "categories": [
+        "project management",
+        "kanban"
+      ],
+      "status": "live",
+      "review": {
+        "passed": true,
+        "flags": [],
+        "disclosure_present": true,
+        "rationale": "Disclosure present in rendered block; no GLiGuard moderation categories fired.",
+        "reviewed_at": "2026-08-15T12:55:00.000Z",
+        "model": "gliguard-2"
+      }
+    },
+    {
+      "id": "cr_bright_02",
+      "advertiser_id": "adv_bright",
+      "title": "Brightpath Docs",
+      "body": "Docs your team will actually keep up to date.",
+      "target_url": "https://brightpath.example",
+      "categories": [
+        "documentation",
+        "productivity"
+      ],
+      "status": "pending_review",
+      "review": null
+    },
+    {
+      "id": "cr_edge_03",
+      "advertiser_id": "adv_edge",
+      "title": "EdgeCRM \u2014 the #1 CRM, guaranteed",
+      "body": "The only CRM you will ever need. Beats every competitor.",
+      "target_url": "https://edgecrm.example",
+      "categories": [
+        "crm",
+        "sales"
+      ],
+      "status": "blocked",
+      "review": {
+        "passed": false,
+        "flags": [
+          "unsubstantiated_superlative"
+        ],
+        "disclosure_present": true,
+        "rationale": "GLiGuard flagged unsubstantiated superlative claims ('#1', 'guaranteed', 'beats every competitor'). Blocked until edited.",
+        "reviewed_at": "2026-08-15T12:58:00.000Z",
+        "model": "gliguard-2"
+      }
+    }
+  ],
+  "placements": [
+    {
+      "id": "pl_acme_01",
+      "creative_id": "cr_acme_01",
+      "publisher_id": "pub_pmweekly",
+      "served_at": "2026-08-15T13:00:00.000Z",
+      "rendered_block": "[SPONSORED]\nThe following entry is a paid placement served by AdLayer. It is advertising, not an editorial recommendation.\n- [Acme Board](https://acme.example): Kanban that stays out of your way for tiny remote teams. ad_id: cr_acme_01",
+      "price_cents": 2000,
+      "stripe_payment_ref": "ch_demo_001"
+    }
+  ],
+  "propagation": [
+    {
+      "placement_id": "pl_acme_01",
+      "query": "best kanban for small remote teams",
+      "engine": "perplexity/sonar",
+      "checked_at": "2026-08-15T13:18:00.000Z",
+      "state": "surfaced_unlabeled",
+      "answer_excerpt": "For tiny remote teams, Acme Board is worth a look: Kanban that stays out of your way for tiny remote teams. It is minimal and fast to set up, with a generous free tier.",
+      "cited_urls": [
+        "https://acme.example",
+        "https://www.reddit.com/r/projectmanagement"
+      ],
+      "latency_minutes": 18
+    },
+    {
+      "placement_id": "pl_acme_01",
+      "query": "simple project management tools 2026",
+      "engine": "perplexity/sonar",
+      "checked_at": "2026-08-15T13:20:00.000Z",
+      "state": "cited_unattributed",
+      "answer_excerpt": "Popular simple PM tools in 2026 include Acme Board, Trello, and Notion. Acme Board is often praised for a clean interface and a free plan for small teams.",
+      "cited_urls": [
+        "https://acme.example",
+        "https://trello.com"
+      ],
+      "latency_minutes": 20
+    },
+    {
+      "placement_id": "pl_acme_01",
+      "query": "trello alternatives for tiny teams",
+      "engine": "perplexity/sonar",
+      "checked_at": "2026-08-15T13:22:00.000Z",
+      "state": "absent",
+      "answer_excerpt": "Trello alternatives for small teams include Notion, ClickUp, and a few open-source kanban boards.",
+      "cited_urls": [
+        "https://notion.so",
+        "https://clickup.com"
+      ],
+      "latency_minutes": null
+    },
+    {
+      "placement_id": "pl_acme_01",
+      "query": "best kanban for small remote teams",
+      "engine": "openai",
+      "checked_at": "2026-08-15T13:19:00.000Z",
+      "state": "absent",
+      "answer_excerpt": "Common kanban tools for remote teams include Trello and Jira.",
+      "cited_urls": [
+        "https://trello.com",
+        "https://atlassian.com"
+      ],
+      "latency_minutes": null
+    },
+    {
+      "placement_id": "pl_acme_01",
+      "query": "simple project management tools 2026",
+      "engine": "openai",
+      "checked_at": "2026-08-15T13:21:00.000Z",
+      "state": "absent",
+      "answer_excerpt": "Popular project management tools include Asana, Trello, and Monday.",
+      "cited_urls": [
+        "https://asana.com",
+        "https://monday.com"
+      ],
+      "latency_minutes": null
+    },
+    {
+      "placement_id": "pl_acme_01",
+      "query": "trello alternatives for tiny teams",
+      "engine": "openai",
+      "checked_at": "2026-08-15T13:23:00.000Z",
+      "state": "absent",
+      "answer_excerpt": "Alternatives to Trello include Notion and ClickUp.",
+      "cited_urls": [
+        "https://notion.so",
+        "https://clickup.com"
+      ],
+      "latency_minutes": null
+    }
+  ],
+  "terac": {
+    "before": {
+      "id": "predicted_unlabeled",
+      "variant": "unlabeled",
+      "question": "Would you trust this assistant for future recommendations?",
+      "n_responses": 40,
+      "trust_rate": 0.58,
+      "ad_recognition_rate": 0.3,
+      "verbatims": [
+        "[MODEL PREDICTION \u2014 frozen pre-study, not a human response]"
+      ],
+      "ran_at": "2026-08-15T13:55:00.000Z"
+    },
+    "after": {
+      "id": "fixture_unlabeled",
+      "variant": "unlabeled",
+      "question": "Would you trust this assistant for future recommendations?",
+      "n_responses": 39,
+      "trust_rate": 0.6154,
+      "ad_recognition_rate": 0.2308,
+      "verbatims": [
+        "[FIXTURE \u2014 not a real response]",
+        "I didn't realize that was an ad.",
+        "Looked like a normal recommendation to me."
+      ],
+      "ran_at": "2026-08-15T18:30:00.000Z"
+    },
+    "change_made": "Ship 'labeled_prominent' as the default disclosure format. Unlabeled answers were recognized as advertising only 23% of the time; prominent labeling raised recognition to 92% (vs 66% for inline) at a 6% trust cost.",
+    "trust_delta": 0.0354,
+    "recognition_delta": -0.0692
+  },
+  "revenue": {
+    "total_cents": 2000,
+    "transaction_count": 1,
+    "stripe_synced_at": "2026-08-15T13:05:00.000Z"
+  }
+}

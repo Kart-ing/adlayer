@@ -1,0 +1,9 @@
+{
+  "id": "pl_acme_01",
+  "creative_id": "cr_acme_01",
+  "publisher_id": "pub_pmweekly",
+  "served_at": "2026-08-15T13:00:00.000Z",
+  "rendered_block": "[SPONSORED]\nThe following entry is a paid placement served by AdLayer. It is advertising, not an editorial recommendation.\n- [Acme Board](https://acme.example): Kanban that stays out of your way for tiny remote teams. ad_id: cr_acme_01",
+  "price_cents": 2000,
+  "stripe_payment_ref": null
+}
