@@ -8,14 +8,15 @@ export default function Disclosure() {
     "https://acme.example",
   );
   return (
-    <>
-      <h1>Disclosure policy</h1>
+    <div className="page narrow">
+      <div className="kick">Disclosed by design</div>
+      <h1 className="title">Disclosure policy</h1>
       <p className="lede">
         Disclosed paid placement is advertising. Undisclosed content engineered to steer agents is
         prompt injection. AdLayer builds the first and not the second.
       </p>
 
-      <h2>The rule</h2>
+      <h2 className="sec">The rule</h2>
       <div className="panel">
         <p>
           Every block AdLayer serves into a publisher&rsquo;s <code>llms.txt</code> carries the tag{" "}
@@ -26,14 +27,14 @@ export default function Disclosure() {
         <div className="notice">{DISCLOSURE_NOTICE}</div>
       </div>
 
-      <h2>The exact block format</h2>
+      <h2 className="sec">The exact block format</h2>
       <p className="muted">
         This is the byte-for-byte shape written to a publisher&rsquo;s file. Measurement string-matches
         against it to tell propagation from organic presence.
       </p>
       <pre className="mono-block">{example}</pre>
 
-      <h2>What we measure after serving</h2>
+      <h2 className="sec">What we measure after serving</h2>
       <ul className="tight">
         <li>
           <strong>surfaced_labeled</strong> — the placement propagated and the disclosure survived
@@ -52,11 +53,11 @@ export default function Disclosure() {
         </li>
       </ul>
 
-      <h2>Compliance veto</h2>
+      <h2 className="sec">Compliance veto</h2>
       <p>
         A creative that would ship without disclosure, or that trips GLiGuard moderation, is{" "}
         <strong>blocked</strong> before it can serve. The veto is a hard fail, not a warning.
       </p>
-    </>
+    </div>
   );
 }
