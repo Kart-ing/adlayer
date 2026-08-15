@@ -1,44 +1,59 @@
 # Pioneer — why inference is failing
 
-**BLUF.** The API key is valid and authenticating correctly. Inference is refused because the account has **no billing plan attached**, not because of anything in our code. Redeem the hackathon promo and it works.
+**BLUF.** Pioneer's own API confirms the team is on the **Pro** plan, and inference still returns `403`. The error text blames the plan; the plan is fine. The real state is **plan active, $0.00 spendable balance**. This is a Pioneer-side provisioning issue, not our code and not a bad key.
 
-**Fix:** https://agent.pioneer.ai/billing → Get Pro → promo code `ZeroHumanHack0826` at the Stripe checkout page.
+**Fastest fixes, in order:** their booth at the venue → their Discord → click **Buy credits** for a token amount to push the balance above $0.00.
 
 ---
 
-## The error
+## Evidence — the plan is NOT the problem
 
 ```
-POST https://api.pioneer.ai/inference
-403 {"detail":{"code":"card_required",
-     "message":"To run inference on Pioneer, subscribe to the Hobby or Pro plan
-                at https://agent.pioneer.ai/billing.",
-     "resolution_url":"https://agent.pioneer.ai/billing"}}
+GET https://api.pioneer.ai/teams
+{"name":"Kartikey's Team","payment_plan":"pro","member_count":1,
+ "current_user_role":"owner","capabilities":{"can_download_weights":true}}
 ```
 
-## Proof it is the plan, not the key
+`payment_plan: "pro"`. Their own API. Meanwhile:
 
-Three requests to the same endpoint, differing only in credentials:
+```
+POST /v1/chat/completions
+403 {"error":{"message":"To run inference on Pioneer, subscribe to the Hobby or
+     Pro plan at https://agent.pioneer.ai/billing.","type":"permission_error"}}
+```
 
-| Credential | Response |
-|---|---|
-| bogus key `pio_sk_totally_fake_00000` | `401 Invalid API key. Please check your credentials.` |
-| no key at all | `401 Authentication required` (`invalid_credentials`) |
-| **our key** | **`403 card_required`** |
+Tested exhaustively — every combination returns the same 403:
 
-A 403 with `card_required` is the server saying *"I know who you are, and you are not entitled to this."* An unrecognised key never reaches that check — it 401s first. So the key is good.
+| Key | Endpoint | Auth header | Result |
+|---|---|---|---|
+| `..._l3op4rd_...` | `/inference` | `X-API-Key` | 403 |
+| `..._c4t_...` | `/inference` | `X-API-Key` | 403 |
+| `..._c4t_...` | `/v1/chat/completions` | `Bearer` | 403 |
+| `..._c4t_...` | `/inference` | `Bearer` | 403 |
+| `..._l10n_...` | `/v1/chat/completions` | `Bearer` | 403 |
 
-**Note on a misleading signal:** `GET /base-models` returns `200` with **no key at all**. It is a public endpoint. Do not use it to test authentication — it will pass no matter what you send.
+Three separate keys, two endpoints, two auth styles. Not a key problem, not an endpoint problem.
 
-## ⚠️ Credit is not a plan
+## What the dashboard actually shows
 
-The dashboard showing **$40 of free credit does not clear this gate.** Retested with the credit visible on the account: still `403 card_required`.
+```
+Plan:               Pro   (Current plan)
+Remaining Balance:  $0.00  + $40.00 free credit
+Auto recharge:      disabled - "Your requests will stop when your balance runs out"
+Inferences:         0
+```
 
-Read the error literally — it says *"subscribe to the Hobby or Pro plan"*, not "add funds." It is a **subscription check**, not a balance check. Credit is what gets *spent* once a plan exists; with no plan attached, the request is refused before any balance is consulted.
+`Remaining Balance $0.00` with auto-recharge off is exactly the documented condition for requests stopping. The `$40.00 free credit` is rendered *beside* the balance rather than inside it, and nothing has drawn against it — the Inferences counter reads 0.
 
-So having credit is not progress toward fixing this. You still have to complete: **Billing → Get Pro → promo `ZeroHumanHack0826` at the Stripe checkout page.** The promo is what attaches the plan; the credit then pays for the inference.
+So the plan entitlement and the spendable credit are separate things, and only the first one landed.
 
-There is no API endpoint that reports plan status — `/account`, `/me`, `/billing`, `/usage` all 404. The only way to check is to attempt an inference call and see whether it 403s.
+## Two false trails, recorded so nobody repeats them
+
+**`GET /base-models` returns 200 with NO key at all.** It is a public endpoint and cannot be used to test authentication. It misled an earlier diagnosis of mine.
+
+**The 403 does distinguish a bad key from an entitlement problem**, which is genuinely useful: a bogus key returns `401 Invalid API key`, no key returns `401 Authentication required`, and a *valid* key with no entitlement returns `403`. So a 403 always means "we know who you are." That much held up.
+
+There is no endpoint that reports balance — `/credits`, `/balance`, `/v1/credits`, `/v1/balance` all 404. `/teams` reports the plan but not the balance. The only way to test is to attempt an inference call.
 
 ## What this blocks
 
@@ -50,7 +65,7 @@ HOSTILE creative  passed: false   flags: ["moderation_unavailable"]
 rationale: "Disclosure verified... HELD — FAILING CLOSED: moderation did not run"
 ```
 
-That is correct and deliberate. A moderation service being down must never become a reason to ship an unmoderated ad. But the practical consequence is that **no placement can serve at all** until the plan is live.
+That is correct and deliberate. A moderation service being down must never become a reason to ship an unmoderated ad. But the practical consequence is that **no placement can serve at all** until the balance is above $0.00.
 
 ## The override, and its cost
 
