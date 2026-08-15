@@ -3,6 +3,14 @@
 import { useState } from "react";
 import type { Question, Variant } from "../lib/spec";
 
+/**
+ * Terac's completion callback. Redirecting here is what marks a submission
+ * complete and releases payment on an `auto_approve` task. Overridable so a
+ * preview deployment can point somewhere else without a code change.
+ */
+const TERAC_CALLBACK =
+  process.env.NEXT_PUBLIC_TERAC_CALLBACK ?? "https://terac.com/api/external/callback";
+
 export default function VoteForm({
   questions,
   submissionId,
@@ -44,8 +52,24 @@ export default function VoteForm({
         }),
       });
       const data = (await res.json()) as { ok: boolean; error?: string };
-      if (data.ok) setDone(true);
-      else setError(data.error ?? "Something went wrong. Please try again.");
+      if (data.ok) {
+        setDone(true);
+        // Tell Terac the task is finished. Without this the submission never
+        // leaves in_progress: `auto_approve` pays "ONLY when the task has a
+        // task_url whose provider redirects to the completion callback", so a
+        // participant would answer, we would keep their data, and they would
+        // never be marked complete or paid. Their response is already stored
+        // above, so this redirect can only ever cost us the completion signal,
+        // never the data.
+        if (submissionId) {
+          const cb = new URL(TERAC_CALLBACK);
+          cb.searchParams.set("submissionId", submissionId);
+          cb.searchParams.set("teracSubmissionId", submissionId);
+          if (taskId) cb.searchParams.set("taskId", taskId);
+          cb.searchParams.set("result", "completed");
+          window.location.assign(cb.toString());
+        }
+      } else setError(data.error ?? "Something went wrong. Please try again.");
     } catch {
       setError("Could not submit. Please check your connection and try again.");
     } finally {
