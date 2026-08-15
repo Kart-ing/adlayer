@@ -35,12 +35,15 @@ function pickPublisher(state: { publishers: Publisher[] }, creative?: Creative):
 export default async function Checkout({
   searchParams,
 }: {
-  searchParams: { cid?: string; status?: string };
+  searchParams: { cid?: string; status?: string; session_id?: string };
 }) {
   const link = process.env.STRIPE_PAYMENT_LINK?.trim() || DEFAULT_PAYMENT_LINK;
   const state = await loadState().catch(() => null);
   const cid = searchParams.cid;
-  const served = searchParams.status === "served";
+  // Treat a Stripe redirect (?session_id=…) as served too, so the confirmation
+  // works whether the Payment Link redirects to /checkout?status=served or just
+  // /checkout (Stripe appends session_id on a successful payment).
+  const served = searchParams.status === "served" || !!searchParams.session_id;
 
   const creative =
     state?.creatives.find((c) => c.id === cid) ??
