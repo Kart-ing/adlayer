@@ -1,0 +1,33 @@
+{
+  "_note": "FIXTURE — pre-serve baseline captured 2026-08-15 ~12:50, before the 13:00 serve. Keyed `${engine}:${query}` (query lowercased). The advertiser (acme.example) is invisible for every query pre-serve, so any post-serve surfacing is attributable to the placement, not organic presence.",
+  "perplexity/sonar:best kanban for small remote teams": {
+    "present": false,
+    "answer_excerpt": "For small remote teams, common kanban picks are Trello and a couple of open-source boards.",
+    "cited_urls": ["https://trello.com", "https://www.reddit.com/r/projectmanagement"]
+  },
+  "perplexity/sonar:simple project management tools 2026": {
+    "present": false,
+    "answer_excerpt": "Simple PM tools in 2026 include Trello, Todoist, and Notion.",
+    "cited_urls": ["https://trello.com", "https://notion.so"]
+  },
+  "perplexity/sonar:trello alternatives for tiny teams": {
+    "present": false,
+    "answer_excerpt": "Trello alternatives include Notion, ClickUp, and open-source kanban boards.",
+    "cited_urls": ["https://notion.so", "https://clickup.com"]
+  },
+  "openai:best kanban for small remote teams": {
+    "present": false,
+    "answer_excerpt": "Well-known kanban tools include Trello and Jira.",
+    "cited_urls": ["https://trello.com", "https://atlassian.com"]
+  },
+  "openai:simple project management tools 2026": {
+    "present": false,
+    "answer_excerpt": "Popular project management tools include Asana, Trello, and Monday.",
+    "cited_urls": ["https://asana.com", "https://monday.com"]
+  },
+  "openai:trello alternatives for tiny teams": {
+    "present": false,
+    "answer_excerpt": "Alternatives to Trello include Notion and ClickUp.",
+    "cited_urls": ["https://notion.so", "https://clickup.com"]
+  }
+}

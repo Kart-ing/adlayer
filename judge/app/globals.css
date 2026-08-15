@@ -1,0 +1,53 @@
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --fg: #1a1f26;
+  --muted: #5b6472;
+  --border: #d9dee6;
+  --accent: #2563eb;
+  --accent-fg: #ffffff;
+  --ok: #15803d;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); line-height: 1.5; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.page { max-width: 640px; margin: 0 auto; padding: 32px 20px 64px; }
+.masthead { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+h1 { font-size: 22px; margin: 0 0 6px; }
+.framing { color: var(--muted); margin: 0 0 20px; }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+.stimulus {
+  white-space: pre-wrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+  background: #fbfcfe;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+fieldset { border: none; margin: 0 0 20px; padding: 0; }
+legend { font-weight: 600; padding: 0; margin-bottom: 8px; }
+.options { display: flex; gap: 10px; flex-wrap: wrap; }
+.opt { display: flex; align-items: center; gap: 6px; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; cursor: pointer; background: var(--card); }
+.opt:hover { border-color: var(--accent); }
+.opt input { accent-color: var(--accent); }
+
+label.field { display: block; font-weight: 600; margin-bottom: 6px; }
+textarea { width: 100%; min-height: 72px; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font: inherit; resize: vertical; }
+
+button {
+  margin-top: 8px; background: var(--accent); color: var(--accent-fg);
+  border: none; border-radius: 8px; padding: 11px 20px; font: inherit; font-weight: 600; cursor: pointer;
+}
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.thanks { text-align: center; padding: 40px 0; }
+.thanks .check { color: var(--ok); font-size: 34px; font-weight: 700; }
+.err { color: #b91c1c; margin-top: 10px; }
+.attn { color: var(--muted); font-size: 12px; margin-top: 24px; }

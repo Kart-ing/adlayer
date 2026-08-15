@@ -132,3 +132,159 @@ Three outcomes, all publishable:
 - **`absent`** — llms.txt does not influence this engine; the premise is weaker than the industry assumes
 
 Ship whichever we measure. Do not chase the exciting one.
+
+---
+
+## 6. Implementation status & plan
+
+Legend: ✅ done & verified · 🔜 next · ⬜ not started.
+
+### Decided scope
+Full PRD B. `web/` is **Next.js**. The Terac judging surface is a **fork of
+`github.com/TeracAI/svg-arena`** living in `judge/` (its own toolchain, excluded from the root
+`tsconfig`).
+
+### ✅ Step 0 — repo prerequisites (build is green)
+- Added `openai` to `package.json` `dependencies` and installed.
+- `tsconfig.json` now excludes `engine/act/**` (legacy CITED SEO code, unused by AdLayer, and
+  imports a dropped `engine/ui/types.ts`) and `judge/**`.
+- Fixed 12 **pre-existing** strict-mode errors in the reused `engine/retrieve/` — type-only
+  imports (`aggregate.ts`, `engine.ts`, `index.ts`), one non-null assert in `mapPool`, and
+  null-guards in `scrape.ts`. Compile-correctness only; **no logic changed** ("reuse, don't
+  rewrite" holds).
+- `npx tsc --noEmit` is clean.
+
+### ✅ Step 1 — Classifier core (`src/prove/classify-propagation.ts`)
+The most important function; built and tested first. Signature follows the contract plus an
+optional pre-serve baseline: `classify(answerText, citedUrls, placement, baseline?)`.
+- `classifyDetailed(...)` returns full evidence (`confidence`, `matched_shingles`, `notes`);
+  `classify(...)` returns just the `PropagationState`.
+- **Ruthless about false positives**: `surfaced_*` is claimed only when a distinctive multi-word
+  (4-gram) fingerprint from `placement.rendered_block` appears in the answer. A bare brand mention
+  or domain citation → `cited_unattributed`. The classifier deliberately **under-claims**
+  propagation (the honest direction for a judge).
+- **Baseline subtraction**: advertiser already present pre-serve, or the copy already in the
+  baseline answer, → not attributed to us.
+- **Disclosure detection** folds unicode bracket look-alikes (`［SPONSORED］`) and zero-width chars
+  to ASCII, and accepts the notice phrasing — covers the red-team counterfeit-label finding.
+- Decoupled from the engine (imports only `src/contract.ts`) so it runs under the repo's
+  `node --test --experimental-strip-types` harness.
+- **Tests** (`src/prove/__tests__/classify-propagation.test.ts`) — 8/8 passing: all four states,
+  the mandated organic-before-serve false-positive, a baseline-copy variant, the unicode
+  counterfeit label, and the weak-brand-signal case.
+
+### ✅ Step 2 — Measurement (`src/prove/measure.ts` + `src/prove/answer-engines.ts`)
+`checkPropagation(placement, queries, flags): Promise<PropagationCheck[]>` — built and verified.
+- **The key adaptation, solved:** the engine adapters return only cited URLs and **discard answer
+  text**, but the classifier needs the text. `answer-engines.ts` **reuses** the engine's disk cache
+  (`getCache`/`setCache` from `engine/retrieve/cache.ts`) and mirrors its retry/backoff +
+  `url_citation` extraction patterns, but returns `{ answerText, citedUrls }`.
+- `askSonar(query)` → OpenRouter model **`perplexity/sonar`** (live web search — polled FIRST;
+  reads both `url_citation` annotations and Perplexity's top-level `citations`). `askOpenAI(query)`
+  → Responses API, `output_text` + annotations (ingestion/control arm). `DEFAULT_ENGINES` is
+  sonar-first; the demo runner reports the two mechanisms **separately, never averaged**.
+- Respects `flags.liveMeasure`: false → reads `src/prove/fixtures/propagation.json` (no network).
+  Live answers cache to disk. Missing key → empty answer → `absent` (never throws).
+  `latency_minutes` = `served_at` → observation time.
+- Baseline consumed per `${engine}:${query}` from `src/prove/fixtures/baseline.json` for the organic
+  false-positive guard. Fixtures (`demo-placement.json`, `demo-queries.json`, `propagation.json`,
+  `baseline.json`) are self-evidently marked and drive the offline demo.
+- **Verified:** `LIVE_MEASURE=0 npm run measure` runs fully offline and reproduces the thesis —
+  sonar `surfaced_unlabeled` at 18m latency (the headline), a `cited_unattributed`, an `absent`;
+  the openai ingestion arm all `absent`. `LIVE_MEASURE=1` with no keys degrades to `absent` without
+  crashing.
+- **Live baseline capture (done):** `captureBaseline(creative, queries, flags)` decides pre-serve
+  presence with the same `mentionsAdvertiser` logic the classifier uses (refactored into a shared,
+  exported helper), and `writeBaseline()` freezes it to `baseline.json`. CLI:
+  `npm run measure -- --baseline [--write]`.
+- **Poll scheduler (done):** `src/prove/poll.ts` — `pollOnce` (the discrete, resumable **Render
+  Workflow** step) and `pollLoop` (continuous, pausing a **Superserve** sandbox between polls via the
+  `SandboxController` seam), both appending to `AdLayerState.propagation[]` through `appendChecks`.
+  CLI: `npm run poll [-- --loop] [-- --write]`. Verified `--write` appends 6 checks per poll into
+  `web/data/state.json`.
+
+### ✅ Step 3 — Terac (`src/prove/terac.ts` + `src/prove/study-design.ts`)
+Built and verified.
+- `study-design.ts` — two neutral questions (trust / ad-recognition), three variant stimuli
+  (`labeled` inline, `unlabeled` stripped, `labeled_prominent` banner), `PARTICIPANT_FRAMING`,
+  `studySpec()` (what the judge app renders), `BANNED_LEADING_PHRASES` + `findBannedPhrase()` +
+  `assertNeutralWording()` (scans questions/options/framing, **not** the ad-copy stimulus).
+- `terac.ts` — parallel arms in one latency cycle: `runStudyArms(flags)` launches all three via
+  `Promise.all`. Predicted-vs-actual before/after: `predictVerdict()` loads the **frozen**
+  `predicted-verdict.json` (before); `runStudy(variant, flags)` returns fixtures when
+  `LIVE_STUDY=0` and otherwise **aggregates only real submissions** (`aggregateSubmissions` — an
+  empty arm throws, never 0%). `buildBeforeAfter()` computes signed deltas; `decideFormatChange()`
+  is the Format agent's shipped decision. MCP transport (`get_context → request_feasibility` →
+  `create_opportunity` → `launch_draft_opportunity` at the deployed `judge/` URL → `get_submissions`)
+  is agent-driven; feed its submissions into `aggregateSubmissions`.
+- **Never fabricates:** fixtures marked (`fixture_` id + `[FIXTURE]` verbatim); `LIVE_STUDY=1` with
+  no submissions reports the frozen prediction only (actuals blank), never invented numbers.
+- **Verified:** `LIVE_STUDY=0 npm run study` prints predicted→actual per arm, the headline
+  (`unlabeled`) before/after, and the Format decision — the fixture shows unlabeled answers
+  recognized as ads only 23% of the time vs 92% prominent, so the agent ships `labeled_prominent`.
+- **Remaining:** the live judging surface (Step 5) that produces those submissions.
+
+### ✅ Step 4 — Web (`web/`, Next.js 14 App Router)
+Self-contained app (own `package.json`/`tsconfig`, excluded from root tsconfig). Built and verified.
+- Routes: `/` (advertiser self-serve), `/checkout`, `/dashboard`, `/disclosure`, plus
+  `POST /api/creative`. Server components read `AdLayerState` from `web/data/state.json`
+  (AdLayerState shape — the root `fixture.json` is CITED-shaped, not reused). `web/lib/contract.ts`
+  **re-exports `src/contract.ts`** (single source of truth; verified it builds across the dir boundary).
+- `/dashboard` (the demo): revenue/placement/`surfaced_unlabeled` KPIs, an **alarm banner** for the
+  headline, per-placement propagation split into **live-retrieval vs ingestion tables (never
+  averaged)**, the Terac predicted→actual before/after with the Format-agent decision, and a
+  creatives/compliance table showing the blocked (vetoed) creative.
+- `/` renders a live-preview self-serve form (client component) → `POST /api/creative` appends a
+  `pending_review` creative; `assertDisclosed()` guards the intake path; validation returns 400.
+- `/checkout` reads `STRIPE_PAYMENT_LINK`; **absent → "Checkout not configured", never a fake success.**
+- `/disclosure` renders the policy + the exact `[SPONSORED]` block format from the contract constants.
+- Dense monospace control-plane styling, no emoji/gradient, focus-visible outlines, real `<label for>`
+  bindings, `overflow-x` scroll containers — built for Replay QA.
+- **Verified:** `npm run build` clean; server started and all four routes returned 200; dashboard
+  showed the alarm/fixture-banner/Format decision/separated arms; checkout showed "not configured";
+  self-serve POST created a `pending_review` creative and validation rejected a missing URL with 400.
+  Root + web typecheck clean; 17 tests still pass.
+
+### ✅ Step 5 — Judging surface (`judge/`, svg-arena-pattern Next app)
+Built and verified end-to-end. (svg-arena is Terac's reference repo; this is a faithful
+implementation of its exact loop rather than a literal clone.)
+- **Attribution both ways** (`lib/attribution.ts`): client-side from the page's `?submissionId=&taskId=`
+  query, server-side from the `Referer` header in `app/api/vote/route.ts` (`reconcile()` prefers the
+  body, falls back to Referer). Verified a Referer-only POST stored `submissionId=ref_9`.
+- **Blind arm assignment** stable per `submissionId` (`assignVariant` hash) — participant always sees
+  the same arm; arms spread evenly.
+- **Task content is generated** from the single source of truth: `npm run gen:study-spec`
+  (`scripts/gen-study-spec.ts`) writes `judge/data/study-spec.json` from `study-design.ts`, so the
+  judge app never resolves project TS across its boundary.
+- **JSONL export** (`GET /api/export`, `force-dynamic`) emits exactly the `Submission` shape
+  `terac.ts` `aggregateSubmissions` consumes.
+- **The loop closes (verified):** ran the server, POSTed 9 real votes across all three arms, exported
+  the JSONL, and fed it back through `terac.ts` → per-arm rates (labeled 67% ad-recognition,
+  unlabeled 25%, prominent 100%) and an `unlabeled` predicted→actual before/after. `npm run build`
+  clean; `judge` typecheck clean.
+- **Remaining:** deploy on Render and point `terac_launch_draft_opportunity`'s task URL at it (must
+  be live before launch).
+
+### ✅ Step 6 — Stripe (`src/prove/revenue.ts`)
+Built and verified against the real (test-mode) restricted key.
+- `syncRevenue()` pages `/charges` with the read-only `rk_` key, nets captured-minus-refunded over
+  succeeded/paid charges → `AdLayerState.revenue`. Refuses a non-`rk_` key; only ever GETs.
+- No key → `{ configured: false }` "not configured" (zeroes, `stripe_synced_at: null`) — never a
+  fabricated charge. `/checkout` already reads `STRIPE_PAYMENT_LINK`.
+- `npm run revenue` prints the summary; `--write` merges it into `web/data/state.json`.
+- **Verified:** live sync returned **$1.00 across 1 charge** (real test charge); `--write` updated
+  the dashboard state (then restored the curated fixture for a deterministic commit); `/checkout`
+  with the env set renders the real "Pay with Stripe" link, and shows "not configured" without it.
+- Secrets live in `.env` (gitignored, untracked — confirmed the key is in no tracked file). Organizers
+  receive the `rk_` key + the single Payment Link.
+
+### Acceptance tracking (§3)
+- [x] `npx tsc --noEmit` clean
+- [x] Tests for all four classification states **plus** the false-positive case
+- [x] Runs fully offline with `LIVE_MEASURE=0`
+- [x] Pre-serve baseline consumed per query + live `captureBaseline`/`writeBaseline` helper
+- [ ] `docs/TERAC.md` with confirmed-vs-assumed marked *(already present)*
+- [x] Study wording passes a banned-leading-phrase assertion
+- [~] Terac arms modeled + before/after wired; judge→JSONL→aggregate loop verified; live launch needs deploy (Step 5)
+- [x] Real Stripe charge visible ($1.00 test charge synced via `rk_`); key held in gitignored `.env`
+- [~] Web app builds + all routes serve; dashboard/checkout/self-serve verified — Replay QA run pending (Step 4)

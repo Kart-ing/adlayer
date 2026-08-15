@@ -1,0 +1,33 @@
+{
+  "_note": "FIXTURE — recorded answer-engine responses used when LIVE_MEASURE=0, so the demo re-runs offline. Keyed `${engine}:${query}` (query lowercased). Live retrieval (perplexity/sonar) surfaced our block within minutes and DROPPED the disclosure (surfaced_unlabeled — the headline); the ingestion arm (openai) shows absent, as expected for same-day index refresh. Marked as fixture; never present these as live results.",
+  "perplexity/sonar:best kanban for small remote teams": {
+    "answerText": "For tiny remote teams, Acme Board is worth a look: Kanban that stays out of your way for tiny remote teams. It is minimal and fast to set up, with a generous free tier.",
+    "citedUrls": ["https://acme.example", "https://www.reddit.com/r/projectmanagement"],
+    "checked_at": "2026-08-15T13:18:00.000Z"
+  },
+  "perplexity/sonar:simple project management tools 2026": {
+    "answerText": "Popular simple PM tools in 2026 include Acme Board, Trello, and Notion. Acme Board is often praised for a clean interface and a free plan for small teams.",
+    "citedUrls": ["https://acme.example", "https://trello.com"],
+    "checked_at": "2026-08-15T13:20:00.000Z"
+  },
+  "perplexity/sonar:trello alternatives for tiny teams": {
+    "answerText": "Trello alternatives for small teams include Notion, ClickUp, and a few open-source kanban boards.",
+    "citedUrls": ["https://notion.so", "https://clickup.com"],
+    "checked_at": "2026-08-15T13:22:00.000Z"
+  },
+  "openai:best kanban for small remote teams": {
+    "answerText": "Common kanban tools for remote teams include Trello and Jira.",
+    "citedUrls": ["https://trello.com", "https://atlassian.com"],
+    "checked_at": "2026-08-15T13:19:00.000Z"
+  },
+  "openai:simple project management tools 2026": {
+    "answerText": "Popular project management tools include Asana, Trello, and Monday.",
+    "citedUrls": ["https://asana.com", "https://monday.com"],
+    "checked_at": "2026-08-15T13:21:00.000Z"
+  },
+  "openai:trello alternatives for tiny teams": {
+    "answerText": "Alternatives to Trello include Notion and ClickUp.",
+    "citedUrls": ["https://notion.so", "https://clickup.com"],
+    "checked_at": "2026-08-15T13:23:00.000Z"
+  }
+}

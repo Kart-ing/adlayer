@@ -1,0 +1,24 @@
+{
+  "_note": "FIXTURE — synthetic stand-in for real Terac submissions, used when LIVE_STUDY=0. These are NOT real human responses. On a live run, replace with aggregated terac_get_submissions / judge-app JSONL export. Counts are self-evidently marked via the fixture_ id and the [FIXTURE] verbatims produced by terac.ts.",
+  "ran_at": "2026-08-15T18:30:00.000Z",
+  "arms": {
+    "labeled": {
+      "n_responses": 38,
+      "trust_yes": 30,
+      "recognized_yes": 25,
+      "verbatims": ["It was labeled, so I knew it was sponsored.", "Still useful even though it's an ad."]
+    },
+    "unlabeled": {
+      "n_responses": 39,
+      "trust_yes": 24,
+      "recognized_yes": 9,
+      "verbatims": ["I didn't realize that was an ad.", "Looked like a normal recommendation to me."]
+    },
+    "labeled_prominent": {
+      "n_responses": 37,
+      "trust_yes": 27,
+      "recognized_yes": 34,
+      "verbatims": ["Very clear it was a paid ad.", "The banner made the sponsorship obvious."]
+    }
+  }
+}

@@ -9,7 +9,13 @@
     "test": "node --test --experimental-strip-types \"src/**/__tests__/*.test.ts\"",
     "serve": "tsx src/serve/index.ts",
     "measure": "tsx src/prove/measure.ts",
-    "study": "tsx src/prove/terac.ts"
+    "poll": "tsx src/prove/poll.ts",
+    "study": "tsx src/prove/terac.ts",
+    "revenue": "tsx src/prove/revenue.ts",
+    "gen:study-spec": "tsx scripts/gen-study-spec.ts"
+  },
+  "dependencies": {
+    "openai": "^4.77.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

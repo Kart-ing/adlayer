@@ -1,0 +1,10 @@
+{
+  "_note": "FROZEN model-predicted human verdict, recorded BEFORE the Terac study returned (PRD-B §2.3). These are PREDICTIONS, not human results — they exist so the mandatory before/after is predicted-vs-actual within one latency cycle. Do not edit after the study launches.",
+  "frozen_at": "2026-08-15T13:55:00.000Z",
+  "n_planned": 40,
+  "predictions": {
+    "labeled": { "trust_rate": 0.72, "ad_recognition_rate": 0.66 },
+    "unlabeled": { "trust_rate": 0.58, "ad_recognition_rate": 0.30 },
+    "labeled_prominent": { "trust_rate": 0.70, "ad_recognition_rate": 0.86 }
+  }
+}
