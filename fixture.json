@@ -1,0 +1,259 @@
+{
+  "client": {
+    "url": "https://brgutterpros.com",
+    "repo": "",
+    "name": "BR Gutter Pros"
+  },
+  "score": {
+    "visibility": 0.1333,
+    "cited_queries": 4,
+    "total_queries": 30
+  },
+  "sources": [
+    {
+      "domain": "yelp.com",
+      "citation_count": 21,
+      "client_present": false
+    },
+    {
+      "domain": "healthgrades.com",
+      "citation_count": 17,
+      "client_present": true
+    },
+    {
+      "domain": "reddit.com",
+      "citation_count": 14,
+      "client_present": false
+    },
+    {
+      "domain": "zocdoc.com",
+      "citation_count": 12,
+      "client_present": false
+    },
+    {
+      "domain": "ada.org",
+      "citation_count": 9,
+      "client_present": false
+    },
+    {
+      "domain": "northbaychamber.example",
+      "citation_count": 7,
+      "client_present": false
+    },
+    {
+      "domain": "opencare.com",
+      "citation_count": 6,
+      "client_present": false
+    },
+    {
+      "domain": "northbaydentalarts.example",
+      "citation_count": 4,
+      "client_present": true
+    },
+    {
+      "domain": "nytimes.com",
+      "citation_count": 3,
+      "client_present": false
+    },
+    {
+      "domain": "sfgate.com",
+      "citation_count": 2,
+      "client_present": false
+    }
+  ],
+  "queries": [
+    {
+      "query": "best cosmetic dentist in North Bay",
+      "cited_urls": [
+        "https://www.yelp.com/search?find_desc=cosmetic+dentist&find_loc=North+Bay",
+        "https://www.healthgrades.com/dentistry-directory/ca-california/north-bay",
+        "https://www.zocdoc.com/dentists/cosmetic-north-bay"
+      ],
+      "cited_domains": [
+        "yelp.com",
+        "healthgrades.com",
+        "zocdoc.com"
+      ],
+      "client_cited": false,
+      "citation_count": 3
+    },
+    {
+      "query": "how much do veneers cost in the Bay Area",
+      "cited_urls": [
+        "https://www.reddit.com/r/Dentistry/comments/veneer_cost_bay_area",
+        "https://www.ada.org/resources/veneers-cost",
+        "https://www.opencare.com/blog/veneers-cost/"
+      ],
+      "cited_domains": [
+        "reddit.com",
+        "ada.org",
+        "opencare.com"
+      ],
+      "client_cited": false,
+      "citation_count": 3
+    },
+    {
+      "query": "emergency dentist open Saturday North Bay",
+      "cited_urls": [
+        "https://www.yelp.com/search?find_desc=emergency+dentist",
+        "https://northbaydentalarts.example/emergency",
+        "https://www.healthgrades.com/emergency-dental-north-bay"
+      ],
+      "cited_domains": [
+        "yelp.com",
+        "northbaydentalarts.example",
+        "healthgrades.com"
+      ],
+      "client_cited": true,
+      "citation_count": 3
+    },
+    {
+      "query": "invisalign vs braces for adults",
+      "cited_urls": [
+        "https://www.ada.org/resources/invisalign-vs-braces",
+        "https://www.reddit.com/r/Invisalign/comments/adult_braces"
+      ],
+      "cited_domains": [
+        "ada.org",
+        "reddit.com"
+      ],
+      "client_cited": false,
+      "citation_count": 2
+    },
+    {
+      "query": "dentist accepting Delta Dental North Bay",
+      "cited_urls": [
+        "https://www.zocdoc.com/insurance/delta-dental/north-bay",
+        "https://northbaychamber.example/directory/health"
+      ],
+      "cited_domains": [
+        "zocdoc.com",
+        "northbaychamber.example"
+      ],
+      "client_cited": false,
+      "citation_count": 2
+    }
+  ],
+  "gaps": [
+    {
+      "keyword": "how much do veneers cost in the Bay Area",
+      "type": "missing_page",
+      "citations": 3,
+      "competing_domains": [
+        "reddit.com",
+        "ada.org",
+        "opencare.com"
+      ]
+    },
+    {
+      "keyword": "best cosmetic dentist in North Bay",
+      "type": "missing_page",
+      "citations": 3,
+      "competing_domains": [
+        "yelp.com",
+        "healthgrades.com",
+        "zocdoc.com"
+      ]
+    },
+    {
+      "keyword": "invisalign vs braces for adults",
+      "type": "thin_content",
+      "citations": 2,
+      "competing_domains": [
+        "ada.org",
+        "reddit.com"
+      ]
+    },
+    {
+      "keyword": "dentist accepting Delta Dental North Bay",
+      "type": "missing_page",
+      "citations": 2,
+      "competing_domains": [
+        "zocdoc.com",
+        "northbaychamber.example"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "robots_txt",
+      "file": "robots.txt",
+      "before": "User-agent: *\nDisallow: /",
+      "after": "User-agent: *\nAllow: /\n\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: OAI-SearchBot\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nSitemap: https://northbaydentalarts.example/sitemap.xml",
+      "rationale": "The site was blocking every crawler including the AI search bots. Nothing else in this report can work until this is fixed."
+    },
+    {
+      "type": "meta",
+      "file": "index.html",
+      "before": "<title>Northbay Dental Arts | Home</title>\n<meta name=\"description\" content=\"Welcome to our practice. Serving patients since 1998.\">",
+      "after": "<title>Cosmetic &amp; Emergency Dentist in North Bay, CA | Northbay Dental Arts</title>\n<meta name=\"description\" content=\"Veneers, Invisalign, and same-day emergency dental care in North Bay. Delta Dental and Cigna accepted. Open Saturdays. Book online or call (707) 555-0142.\">",
+      "rationale": "The original title carries no category, geography, or service terms \u2014 nothing for an answer engine to match a local intent query against."
+    },
+    {
+      "type": "schema",
+      "file": "index.html",
+      "before": "",
+      "after": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"Dentist\",\n  \"name\": \"Northbay Dental Arts\",\n  \"url\": \"https://northbaydentalarts.example\",\n  \"telephone\": \"+1-707-555-0142\",\n  \"address\": {\n    \"@type\": \"PostalAddress\",\n    \"streetAddress\": \"418 Marina Blvd\",\n    \"addressLocality\": \"North Bay\",\n    \"addressRegion\": \"CA\",\n    \"postalCode\": \"94901\"\n  },\n  \"openingHours\": \"Mo-Sa 08:00-18:00\",\n  \"medicalSpecialty\": [\"Cosmetic Dentistry\", \"Emergency Dentistry\", \"Orthodontics\"]\n}\n</script>",
+      "rationale": "No structured data at all. Dentist JSON-LD gives engines an unambiguous name/address/phone, hours, and specialty list to quote."
+    },
+    {
+      "type": "llms_txt",
+      "file": "llms.txt",
+      "after": "# Northbay Dental Arts\n\n> Cosmetic, restorative, and emergency dental practice in North Bay, California. Open Monday-Saturday, same-day emergency appointments, Delta Dental and Cigna in-network.\n\n## Services\n- [Veneers](https://northbaydentalarts.example/veneers): porcelain veneers, $1,100-$2,400 per tooth\n- [Invisalign](https://northbaydentalarts.example/invisalign): clear aligners for adults, 12-18 month average\n- [Emergency care](https://northbaydentalarts.example/emergency): same-day, open Saturdays\n\n## Practical\n- Address: 418 Marina Blvd, North Bay, CA 94901\n- Phone: (707) 555-0142\n- Insurance: Delta Dental, Cigna, Aetna, MetLife\n",
+      "rationale": "Gives answer engines one clean summary of services, pricing, and contact details instead of making them infer it from marketing copy."
+    },
+    {
+      "type": "new_page",
+      "file": "blog/veneers-cost-bay-area.md",
+      "after": "---\ntitle: \"What Veneers Actually Cost in the Bay Area (2026)\"\ndescription: \"Real price ranges for porcelain and composite veneers in the North Bay, what drives the difference, and what insurance does and doesn't cover.\"\n---\n\n# What Veneers Actually Cost in the Bay Area (2026)\n\nPorcelain veneers in the North Bay run **$1,100 to $2,400 per tooth**. Composite veneers run **$400 to $900 per tooth**. A typical smile makeover covers 6 to 10 teeth.\n\n## What drives the range\n\n| Factor | Effect on price |\n|---|---|\n| Material | Porcelain costs 2-3x composite but lasts 10-15 years vs 5-7 |\n| Lab | Local ceramist work costs more than an offshore lab |\n| Prep work | Existing decay or old crowns add cost before veneers start |\n\n## What insurance covers\n\nVeneers are classified as cosmetic, so Delta Dental, Cigna, and Aetna generally do not cover them. They do cover an underlying crown or filling when the tooth is structurally compromised.\n\n## Questions to ask before you commit\n\n1. Is this porcelain or composite, and which lab?\n2. How many appointments, and is there a temporary phase?\n3. What is the warranty if one chips?\n",
+      "targets_keyword": "how much do veneers cost in the Bay Area",
+      "rationale": "Top gap: 3 citations, all to third-party sites, and the client has no pricing page at all."
+    },
+    {
+      "type": "backlink_call",
+      "target": {
+        "name": "North Bay Chamber of Commerce",
+        "domain": "northbaychamber.example",
+        "phone": "+1-707-555-0110",
+        "category": "chamber",
+        "contact_person": "Membership Coordinator",
+        "contact_title": "Membership Coordinator",
+        "why_relevant": "Cited by the engine for \"dentist accepting Delta Dental North Bay\" and its member directory is indexed. The client is a paying member but is not listed under Health.",
+        "cited_by_engine": true
+      },
+      "brief": "Call the North Bay Chamber membership line. Confirm Northbay Dental Arts is a current member, ask to be added to the online member directory under Health & Wellness with a link to northbaydentalarts.example, and ask how long the listing takes to appear.",
+      "call_id": null,
+      "status": "pending_approval",
+      "outcome_type": null,
+      "outcome": null,
+      "outcome_summary": null,
+      "transcript": null,
+      "recording_url": null,
+      "backlink_url": null
+    },
+    {
+      "type": "backlink_call",
+      "target": {
+        "name": "Opencare",
+        "domain": "opencare.com",
+        "phone": "+1-855-555-0177",
+        "category": "directory",
+        "contact_person": null,
+        "contact_title": null,
+        "why_relevant": "Cited for the top veneers-cost query. Runs a dentist directory the client is not listed in.",
+        "cited_by_engine": true
+      },
+      "brief": "Call Opencare's practice-onboarding line and ask what is required to add Northbay Dental Arts to their North Bay dentist directory, including any fees and the review timeline.",
+      "call_id": null,
+      "status": "pending_approval",
+      "outcome_type": null,
+      "outcome": null,
+      "outcome_summary": null,
+      "transcript": null,
+      "recording_url": null,
+      "backlink_url": null
+    }
+  ],
+  "pr_url": "https://github.com/northbay/site/pull/42",
+  "indexnow_submitted_at": "2026-07-24T21:07:33.000Z"
+}

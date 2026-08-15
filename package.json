@@ -1,0 +1,19 @@
+{
+  "name": "adlayer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The ad network for the answer layer. Disclosed placements in llms.txt, and measurement of whether the label survives the model.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --experimental-strip-types \"src/**/__tests__/*.test.ts\"",
+    "serve": "tsx src/serve/index.ts",
+    "measure": "tsx src/prove/measure.ts",
+    "study": "tsx src/prove/terac.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
