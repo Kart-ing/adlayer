@@ -7,7 +7,7 @@
 
 import { createRequire } from "module";
 import OpenAI from "openai";
-import type { EngineResult } from "./types";
+import { EngineResult } from "./types";
 import { getCache, setCache } from "./cache";
 
 const OPENAI_MODEL = "gpt-5.2";
@@ -84,7 +84,7 @@ async function mapPool<T, R>(items: T[], limit: number, fn: (item: T) => Promise
   async function worker() {
     while (next < items.length) {
       const idx = next++;
-      results[idx] = await fn(items[idx]!);
+      results[idx] = await fn(items[idx]);
     }
   }
   await Promise.all(Array.from({ length: Math.min(limit, items.length) || 1 }, worker));

@@ -1,5 +1,5 @@
 // Aggregate engine results into a source leaderboard + visibility score.
-import type { EngineResult, RetrieveOutput, SourceStats } from "./types";
+import { EngineResult, RetrieveOutput, SourceStats } from "./types";
 import type { QueryResult } from "../contract";
 
 const MAX_SOURCES = 20;

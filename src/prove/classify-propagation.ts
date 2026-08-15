@@ -157,37 +157,41 @@ interface BlockProvenance {
 
 /**
  * Pull provenance out of `placement.rendered_block`. We do NOT assume a rigid
- * format (Person A owns the renderer); we extract robustly:
- *   - the first markdown link `[title](url)`, else the first bare URL,
- *   - the body as everything left after stripping the disclosure tag, the
- *     disclosure notice, the markdown link, any URLs, and an `ad_id:` marker.
+ * format — Person A's renderer (src/serve/render.ts) puts the tag INSIDE the
+ * anchor, `[[SPONSORED] title](url)`, and again before the body and notice, while
+ * simpler blocks put `[SPONSORED]` on its own line. We handle both:
+ *   1. strip the disclosure scaffolding FIRST (so a nested `[SPONSORED]` inside the
+ *      anchor collapses `[[SPONSORED] title]` → `[ title]` and stops breaking the
+ *      markdown-link parse) and the signed `<!-- adlayer: … -->` provenance comment,
+ *   2. then take the first markdown link `[title](url)` (else the first bare URL),
+ *   3. and the body as whatever copy remains — the propagation fingerprint.
  */
 function extractProvenance(renderedBlock: string): BlockProvenance {
+  // 1. Remove disclosure scaffolding + the HTML provenance comment up front.
+  let clean = renderedBlock.replace(new RegExp(escapeRe(DISCLOSURE_TAG), "gi"), " ");
+  clean = clean.split(DISCLOSURE_NOTICE).join(" ");
+  clean = clean.replace(/<!--[\s\S]*?-->/g, " ");
+
+  // 2. Anchor + URL. `[^\]]+?` is safe now that the inner tag bracket is gone.
   let title = "";
   let url: string | null = null;
-
-  const mdLink = renderedBlock.match(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/);
+  const mdLink = clean.match(/\[\s*([^\]]+?)\s*\]\((https?:\/\/[^)\s]+)\)/);
   if (mdLink) {
-    title = mdLink[1] ?? "";
+    title = (mdLink[1] ?? "").trim();
     url = mdLink[2] ?? null;
   } else {
-    const bare = renderedBlock.match(/https?:\/\/[^\s)\]}"'<>]+/);
+    const bare = clean.match(/https?:\/\/[^\s)\]}"'<>]+/);
     if (bare) url = bare[0];
   }
 
-  let body = renderedBlock;
-  // Remove the disclosure scaffolding so it never counts as advertiser "copy".
-  body = body.replace(new RegExp(escapeRe(DISCLOSURE_TAG), "gi"), " ");
-  body = body.split(DISCLOSURE_NOTICE).join(" ");
-  // Remove the markdown link (keep neither title nor URL in the body fingerprint).
-  body = body.replace(/\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g, " ");
-  // Remove any remaining bare URLs and an ad_id provenance marker.
-  body = body.replace(/https?:\/\/[^\s)\]}"'<>]+/g, " ");
-  body = body.replace(/ad_id\s*[:=]\s*\S+/gi, " ");
-  // Drop list/blockquote punctuation.
-  body = body.replace(/^[\s>*\-]+/gm, " ");
+  // 3. Body fingerprint: drop the markdown link, bare URLs, and an ad_id marker.
+  let body = clean
+    .replace(/\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g, " ")
+    .replace(/https?:\/\/[^\s)\]}"'<>]+/g, " ")
+    .replace(/ad_id\s*[:=]\s*\S+/gi, " ")
+    .replace(/^[\s>*\-]+/gm, " ");
 
-  return { domain: url ? domainOf(url) : null, title: title.trim(), body: body.trim() };
+  return { domain: url ? domainOf(url) : null, title, body: body.trim() };
 }
 
 function escapeRe(s: string): string {

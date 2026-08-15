@@ -5,7 +5,7 @@
 // its own timeout (5s). Any results collected before the deadline are kept;
 // unfinished engine work is dropped.
 
-import type { RetrieveOutput, QueryResult } from "./types";
+import { RetrieveOutput, QueryResult } from "./types";
 import type { EngineResult } from "./types";
 import { scrapeHomepage } from "./scrape";
 import { buildQueries } from "./queries";
