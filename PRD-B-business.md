@@ -33,6 +33,10 @@ Respect `RunFlags.liveMeasure`. When false, read fixtures. Cache every live resp
 
 Poll on a schedule from 13:00. Latency is the finding; you cannot reconstruct it after the fact.
 
+**⚠️ REVISED — target live-retrieval engines first.** The obvious objection is that engines take hours or months to ingest `llms.txt`, so we will measure `absent` and have nothing. That is true of **training and index refresh**. It is not true of **live retrieval**: engines that fetch at query time can surface a page within minutes.
+
+So poll **`perplexity/sonar` first** — it is already the fallback path in `engine/retrieve` and it does live web search. Treat ingestion-based engines as the slow control arm and report them separately. Do not average the two together; they are measuring different mechanisms, and conflating them is the kind of thing a judge will catch.
+
 ### 2.2 Classifier — `classify-propagation.ts`
 
 `classify(answerText, citedUrls, placement): PropagationState`
@@ -52,18 +56,35 @@ Document the matching heuristic and its limits in comments. If evidence is weak,
 
 ### 2.3 Terac — mandatory, gates eligibility
 
-Research first, and write `docs/TERAC.md`: exact endpoints or MCP tools, auth, response shape, realistic panel latency, cost. Mark confirmed vs assumed. Latency determines whether round 2 is possible at all.
+**⚠️ REWRITTEN. Research is done — read `docs/TERAC.md` before touching this section. The schedule in v1 was impossible.**
 
-**Study design.** Show real people an assistant answer containing a paid placement, in three variants: `labeled`, `unlabeled`, `labeled_prominent`. Measure:
+**Panel latency is 5–6 hours, not minutes.** Confirmed from terac.com/mcp: quoted at *"$84 · eta 6h"*, typical completion *"5h 12m"*. Example CPI is **$28/response** for a specialist.
+
+Four consequences:
+
+**1. Sequential rounds are dead.** Launch `labeled` / `unlabeled` / `labeled_prominent` **simultaneously as parallel arms of one study**. One latency cycle. A randomized A/B is better science than a sequential before/after anyway — no time confound, no ordering effect.
+
+**2. The before/after is now predicted-vs-actual.** Before = the model's *predicted* human verdict, recorded and frozen before the study returns. After = the actual human verdict. Plus the format change the **Format agent** ships because of it. That satisfies the guidebook's "real human input measurably improved the project" inside one cycle. Freeze the prediction in a committed file before results land, or the comparison is worthless.
+
+**3. ⚠️ A live task URL is on YOUR critical path, ahead of the study.** Participants are sent to *our deployed app* to do the judging. Terac appends `?submissionId=...&taskId=...` to the URL we supply, and that is the only way responses tie back to participants. **Fork `github.com/TeracAI/svg-arena`** (MIT, TypeScript) — it is Terac's own reference implementation of this exact loop and already solves attribution (client-side in `app/page.tsx`, server-side via the `Referer` header), the judging UI, and JSONL export. Do not rebuild it.
+
+**4. Feasibility-check before you launch.** `terac_request_feasibility` returns a real quote and ETA. At specialist rates n=40 is ~$1,120. Call it, read the number, then commit. General Population per the guidebook — cheapest and fastest.
+
+Connection is **interactive OAuth**, not an API key:
+```
+claude mcp add --transport http terac https://terac.com/api/mcp
+```
+
+**Study design.** Show real people an assistant answer containing a paid placement. Measure:
 
 1. Would you still trust this assistant?
 2. Did you recognize that result as an ad?
 
-Wording must be neutral. Judges include PMs from DeepMind and Stripe — a leading question gets caught. Target General Population per the guidebook.
+Wording must be neutral. Judges include PMs from DeepMind and Stripe — a leading question gets caught.
 
 `runStudy(variant, flags)` respects `LIVE_STUDY`. **Never fabricate results.** Fixture data must be self-evidently marked as fixture in the returned object.
 
-Round 1 by 14:30. Change the ad format based on what round 1 says. Round 2 measures the change. That is the before/after we ship.
+**Launch by 14:00.** 5h latency from 14:00 lands at ~19:00, already past lock. Earlier is strictly better. If the feasibility quote says gen-pop latency exceeds ~4h, launch before anything else on your list is finished — a half-built judging page that collects real responses beats a polished one that launches too late.
 
 ### 2.4 Web — `web/`
 

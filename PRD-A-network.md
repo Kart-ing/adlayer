@@ -64,6 +64,12 @@ Pioneer: base `https://api.pioneer.ai`, header `X-API-Key`. Confirm the encoder-
 
 Three static sites we own, deployed on Render. Each needs:
 
+**⚠️ REVISED — build for live retrieval, not ingestion.** We are no longer betting on an engine ingesting `llms.txt` into an index over hours. We are testing whether a **live-retrieval** engine (`perplexity/sonar`) fetches the page at query time and carries the sponsored line into its answer. That changes what these sites need:
+
+- **A distinctive, greppable phrase** in the sponsored block. Provenance detection is string matching; if the phrase also appears elsewhere on the web, the result is unprovable.
+- **Content that plausibly ranks for a specific, narrow query we choose in advance.** Write the query list first, then the content. Person B baselines those exact queries before 13:00.
+- **Fast, crawlable, no JS.** A live-retrieval fetch has a short budget. Static HTML, small pages, valid sitemap.
+
 - A narrow niche with genuinely thin existing coverage. Narrow is better — it makes propagation detectable above noise.
 - 4–6 pages of **real, useful content**. Thin or fake content invalidates the experiment.
 - Valid `/llms.txt` per llmstxt.org, with the `<!-- ADLAYER_SLOT -->` marker.
@@ -83,6 +89,18 @@ Publisher crawls and verification run in Superserve sandboxes, paused between pu
 - [ ] Test: absent `PIONEER_API_KEY` degrades without throwing
 - [ ] 3 publisher sites live on public Render URLs with valid llms.txt
 - [ ] **13:00 — first real placement served, `served_at` recorded**
+
+## 3a. ⚠️ Red team findings — already confirmed against v1
+
+An adversarial pass broke earlier versions of this module. These are reproduced, not hypothetical. Every fix carries a regression test.
+
+| Finding | Severity |
+|---|---|
+| Advertiser copy forged a rival's full provenance field — **confirmed bypass** | critical |
+| `renderLlmsTxt` served unreviewed creatives, routing around the compliance veto | high |
+| Unicode bracket lookalikes shipped a counterfeit `[SPONSORED]` label | high |
+
+The provenance forgery is the worst of the three. It would let Person B report a propagation finding that is not real — worse for this project than finding nothing at all. **Treat advertiser input as hostile in every function.**
 
 ## 4. Rules
 
