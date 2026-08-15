@@ -1,146 +1,226 @@
 import { loadState, engineKind } from "../../lib/state";
-import { pct, signedPct, latency, ts, STATE_META } from "../../lib/format";
-import type { PropagationCheck } from "../../lib/contract";
+import { pct, signedPct, ts } from "../../lib/format";
+import type { PropagationCheck, PropagationState } from "../../lib/contract";
 
 export const dynamic = "force-dynamic";
 
-function StateBadge({ check }: { check: PropagationCheck }) {
-  const m = STATE_META[check.state];
-  return <span className={`badge ${m.cls}`}>{m.label}</span>;
+const STATE_LABEL: Record<PropagationState, string> = {
+  absent: "absent",
+  surfaced_labeled: "surfaced · labeled",
+  surfaced_unlabeled: "surfaced · UNLABELED",
+  cited_unattributed: "cited · unattributed",
+};
+const STATE_CLS: Record<PropagationState, string> = {
+  absent: "st-absent",
+  surfaced_labeled: "st-labeled",
+  surfaced_unlabeled: "st-unlabeled",
+  cited_unattributed: "st-cited",
+};
+
+function Chip({ state }: { state: PropagationState }) {
+  return (
+    <span className={`chip ${STATE_CLS[state]}`}>
+      <span className="cd" />
+      {STATE_LABEL[state]}
+    </span>
+  );
 }
 
-function ArmTable({ title, checks }: { title: string; checks: PropagationCheck[] }) {
-  return (
-    <div className="panel" style={{ marginBottom: 12 }}>
-      <h2 style={{ marginTop: 0 }}>{title}</h2>
-      <div className="scroll-x">
-        <table>
-          <thead>
-            <tr>
-              <th>query</th>
-              <th>engine</th>
-              <th>state</th>
-              <th>latency</th>
-              <th>checked</th>
-              <th>cited</th>
-            </tr>
-          </thead>
-          <tbody>
-            {checks.map((c, i) => (
-              <tr key={i}>
-                <td>{c.query}</td>
-                <td className="muted">{c.engine}</td>
-                <td>
-                  <StateBadge check={c} />
-                </td>
-                <td>{latency(c.latency_minutes)}</td>
-                <td className="muted">{ts(c.checked_at)}</td>
-                <td className="muted">{c.cited_urls.length}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+function Lat({ minutes, max, crit }: { minutes: number | null; max: number; crit: boolean }) {
+  if (minutes === null) {
+    return (
+      <div className="lat none" title="not surfaced">
+        <div className="track" />
+        <span className="val">—</span>
       </div>
+    );
+  }
+  const w = max > 0 ? Math.max(8, Math.round((minutes / max) * 100)) : 0;
+  return (
+    <div className={`lat ${crit ? "crit" : ""}`} title={`${minutes} minutes from serve to first observation`}>
+      <div className="track">
+        <div className="fill" style={{ width: `${w}%` }} />
+      </div>
+      <span className="val">{minutes}m</span>
+    </div>
+  );
+}
+
+function CmpRow({ name, before, after }: { name: string; before: number; after: number }) {
+  const delta = after - before;
+  return (
+    <div className="cmp-row">
+      <div className="name">{name}</div>
+      <div className="cmp-bars">
+        <div className="cmp-line pred">
+          <span className="tag">predicted</span>
+          <div className="track">
+            <div className="fill" style={{ width: `${Math.round(before * 100)}%` }} />
+          </div>
+          <span className="num">{pct(before)}</span>
+        </div>
+        <div className="cmp-line act">
+          <span className="tag">actual</span>
+          <div className="track">
+            <div className="fill" style={{ width: `${Math.round(after * 100)}%` }} />
+          </div>
+          <span className="num">{pct(after)}</span>
+        </div>
+      </div>
+      <div className={`delta ${delta >= 0 ? "up" : "down"}`}>{signedPct(delta)}</div>
     </div>
   );
 }
 
 export default async function Dashboard() {
   const state = await loadState();
-  const headline = state.propagation.filter((c) => c.state === "surfaced_unlabeled");
-  const live = state.propagation.filter((c) => engineKind(c.engine) === "live_retrieval");
-  const ingestion = state.propagation.filter((c) => engineKind(c.engine) === "ingestion");
+  const checks = state.propagation;
+  const headline = checks.filter((c) => c.state === "surfaced_unlabeled");
   const terac = state.terac;
+
+  const queries = [...new Set(checks.map((c) => c.query))];
+  const engines = [...new Set(checks.map((c) => c.engine))];
+  const liveEngines = engines.filter((e) => engineKind(e) === "live_retrieval");
+  const ingEngines = engines.filter((e) => engineKind(e) === "ingestion");
+  const orderedEngines = [...liveEngines, ...ingEngines];
+  const maxLat = Math.max(1, ...checks.map((c) => c.latency_minutes ?? 0));
+  const fastest = checks
+    .map((c) => c.latency_minutes)
+    .filter((m): m is number => m !== null)
+    .sort((a, b) => a - b)[0];
+  const cell = (q: string, e: string): PropagationCheck | undefined =>
+    checks.find((c) => c.query === q && c.engine === e);
 
   return (
     <>
-      <h1>Dashboard</h1>
+      <p className="kicker">Propagation · answer layer</p>
+      <h1>Does the &ldquo;sponsored&rdquo; label survive the model?</h1>
       <p className="lede">
-        Does the &ldquo;sponsored&rdquo; label survive the model? Live-retrieval and ingestion
-        engines are reported separately — they measure different mechanisms and are never averaged.
+        We serve a disclosed placement into a publisher&rsquo;s <code>llms.txt</code>, then poll answer
+        engines. Live-retrieval and ingestion engines are reported separately — they measure different
+        mechanisms and are never averaged.
       </p>
 
       {headline.length > 0 ? (
         <div className="alarm" role="alert">
-          <strong>surfaced_unlabeled × {headline.length}.</strong> A live-retrieval engine surfaced
-          the placement&rsquo;s copy but dropped the disclosure. In the answer layer, the ad
-          disclosure did not survive the model.
+          <span className="glyph">surfaced_unlabeled ×{headline.length}</span>
+          <span className="body">
+            A live-retrieval engine surfaced the placement&rsquo;s exact copy but <strong>dropped the
+            disclosure</strong>. In the answer layer, the ad label did not survive the model — the
+            headline finding.
+          </span>
         </div>
       ) : null}
 
-      <div className="grid cols-3" style={{ marginBottom: 8 }}>
-        <div className="panel">
-          <div className="kpi">${(state.revenue.total_cents / 100).toFixed(2)}</div>
-          <div className="kpi-label">
-            revenue · {state.revenue.transaction_count} txn
-          </div>
+      <div className="stat-grid" style={{ marginTop: 14 }}>
+        <div className="stat is-good">
+          <div className="stat-num">${(state.revenue.total_cents / 100).toFixed(2)}</div>
+          <div className="stat-label">revenue</div>
+          <div className="stat-sub">{state.revenue.transaction_count} real charge(s)</div>
         </div>
-        <div className="panel">
-          <div className="kpi">{state.placements.length}</div>
-          <div className="kpi-label">placements served</div>
+        <div className="stat">
+          <div className="stat-num">{state.placements.length}</div>
+          <div className="stat-label">placements served</div>
+          <div className="stat-sub">{checks.length} propagation checks</div>
         </div>
-        <div className="panel">
-          <div className="kpi" style={{ color: headline.length ? "var(--red)" : "var(--fg)" }}>
-            {headline.length}
-          </div>
-          <div className="kpi-label">surfaced_unlabeled</div>
+        <div className="stat">
+          <div className="stat-num">{fastest === undefined ? "—" : `${fastest}m`}</div>
+          <div className="stat-label">fastest surface</div>
+          <div className="stat-sub">live retrieval, from serve</div>
+        </div>
+        <div className={`stat ${headline.length ? "is-crit" : ""}`}>
+          <div className="stat-num">{headline.length}</div>
+          <div className="stat-label">surfaced_unlabeled</div>
+          <div className="stat-sub">label stripped by the model</div>
         </div>
       </div>
 
       {state.placements.map((p) => {
-        const liveP = live.filter((c) => c.placement_id === p.id);
-        const ingP = ingestion.filter((c) => c.placement_id === p.id);
         const creative = state.creatives.find((c) => c.id === p.creative_id);
         return (
           <section key={p.id}>
             <h2>
-              placement {p.id} · {creative?.title ?? p.creative_id} · served {ts(p.served_at)}
+              placement · {creative?.title ?? p.creative_id} → {p.publisher_id} · served {ts(p.served_at)}
             </h2>
-            <ArmTable title="Live retrieval (fetches at query time)" checks={liveP} />
-            <ArmTable title="Ingestion (index refresh) — control arm" checks={ingP} />
+            <div className="legend">
+              <span className="chip st-labeled"><span className="cd" />surfaced · labeled</span>
+              <span className="chip st-unlabeled"><span className="cd" />surfaced · UNLABELED</span>
+              <span className="chip st-cited"><span className="cd" />cited · unattributed</span>
+              <span className="chip st-absent"><span className="cd" />absent</span>
+            </div>
+            <div className="panel scroll-x" style={{ padding: 0 }}>
+              <table className="matrix">
+                <thead>
+                  <tr>
+                    <th rowSpan={2}>query</th>
+                    {liveEngines.length ? (
+                      <th className="grp live" colSpan={liveEngines.length}>
+                        ▸ Live retrieval (fetches at query time)
+                      </th>
+                    ) : null}
+                    {ingEngines.length ? (
+                      <th className="grp" colSpan={ingEngines.length}>
+                        Ingestion · control arm (index refresh)
+                      </th>
+                    ) : null}
+                  </tr>
+                  <tr>
+                    {orderedEngines.map((e) => (
+                      <th key={e}>{e}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {queries.map((q) => (
+                    <tr key={q}>
+                      <td className="q">{q}</td>
+                      {orderedEngines.map((e) => {
+                        const c = cell(q, e);
+                        return (
+                          <td key={e}>
+                            {c ? (
+                              <div className="cell">
+                                <Chip state={c.state} />
+                                <Lat
+                                  minutes={c.latency_minutes}
+                                  max={maxLat}
+                                  crit={c.state === "surfaced_unlabeled"}
+                                />
+                              </div>
+                            ) : (
+                              <span className="faint">—</span>
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </section>
         );
       })}
 
       {terac ? (
         <section>
-          <h2>Terac trust study — predicted vs actual ({terac.after.variant} arm)</h2>
+          <h2>Terac trust study · predicted → actual ({terac.after.variant} arm)</h2>
           <div className="panel">
-            <div className="scroll-x">
-              <table>
-                <thead>
-                  <tr>
-                    <th>metric</th>
-                    <th>predicted (before)</th>
-                    <th>actual (after)</th>
-                    <th>Δ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>would still trust</td>
-                    <td>{pct(terac.before.trust_rate)}</td>
-                    <td>{pct(terac.after.trust_rate)}</td>
-                    <td className={terac.trust_delta < 0 ? "delta-neg" : "delta-pos"}>
-                      {signedPct(terac.trust_delta)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>recognized as an ad</td>
-                    <td>{pct(terac.before.ad_recognition_rate)}</td>
-                    <td>{pct(terac.after.ad_recognition_rate)}</td>
-                    <td className={terac.recognition_delta < 0 ? "delta-neg" : "delta-pos"}>
-                      {signedPct(terac.recognition_delta)}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className="cmp">
+              <CmpRow name="Would still trust" before={terac.before.trust_rate} after={terac.after.trust_rate} />
+              <CmpRow
+                name="Recognized as an ad"
+                before={terac.before.ad_recognition_rate}
+                after={terac.after.ad_recognition_rate}
+              />
             </div>
-            <p className="muted" style={{ marginBottom: 4 }}>
-              n = {terac.after.n_responses} · after: {ts(terac.after.ran_at)}
+            <p className="faint" style={{ margin: "14px 0 0", fontSize: 12 }}>
+              n = {terac.after.n_responses} real respondents · before = frozen model prediction · after{" "}
+              {ts(terac.after.ran_at)}
             </p>
-            <div className="notice">
-              <strong>Format agent decision.</strong> {terac.change_made}
+            <div className="callout">
+              <div className="lbl">Format agent decision</div>
+              {terac.change_made}
             </div>
           </div>
         </section>
@@ -148,25 +228,26 @@ export default async function Dashboard() {
 
       <section>
         <h2>Creatives &amp; compliance</h2>
-        <div className="panel scroll-x">
-          <table>
+        <div className="panel scroll-x" style={{ padding: 0 }}>
+          <table className="data">
             <thead>
               <tr>
                 <th>id</th>
                 <th>title</th>
                 <th>status</th>
-                <th>compliance</th>
+                <th>compliance rationale</th>
               </tr>
             </thead>
             <tbody>
               {state.creatives.map((c) => (
                 <tr key={c.id}>
-                  <td className="muted">{c.id}</td>
+                  <td className="id">{c.id}</td>
                   <td>{c.title}</td>
                   <td>
                     <span
-                      className="badge"
-                      style={{ color: c.status === "blocked" ? "var(--red)" : undefined }}
+                      className={`badge ${
+                        c.status === "blocked" ? "blocked" : c.status === "live" ? "live" : c.status === "pending_review" ? "pending" : ""
+                      }`}
                     >
                       {c.status}
                     </span>
