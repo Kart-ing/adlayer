@@ -1,6 +1,6 @@
 {
   "_fixture": true,
-  "_note": "FIXTURE AdLayerState \u2014 renders the app with zero env vars. Propagation and Terac values mirror the offline demos in src/prove. Replace with live state on a real run.",
+  "_note": "FIXTURE AdLayerState — renders the app with zero env vars. Propagation and Terac values mirror the offline demos in src/prove. Replace with live state on a real run.",
   "publishers": [
     {
       "id": "pub_pmweekly",
@@ -83,7 +83,7 @@
     {
       "id": "cr_edge_03",
       "advertiser_id": "adv_edge",
-      "title": "EdgeCRM \u2014 the #1 CRM, guaranteed",
+      "title": "EdgeCRM — the #1 CRM, guaranteed",
       "body": "The only CRM you will ever need. Beats every competitor.",
       "target_url": "https://edgecrm.example",
       "categories": [
@@ -101,6 +101,18 @@
         "reviewed_at": "2026-08-15T12:58:00.000Z",
         "model": "gliguard-2"
       }
+    },
+    {
+      "id": "cr_b791be34",
+      "advertiser_id": "adv_selfserve_4d5af9",
+      "title": "ajhsdg",
+      "body": "jahsdg",
+      "target_url": "https://wikipedia.com",
+      "categories": [
+        "asd"
+      ],
+      "status": "pending_review",
+      "review": null
     }
   ],
   "placements": [
@@ -203,7 +215,7 @@
       "trust_rate": 0.58,
       "ad_recognition_rate": 0.3,
       "verbatims": [
-        "[MODEL PREDICTION \u2014 frozen pre-study, not a human response]"
+        "[MODEL PREDICTION — frozen pre-study, not a human response]"
       ],
       "ran_at": "2026-08-15T13:55:00.000Z"
     },
@@ -215,7 +227,7 @@
       "trust_rate": 0.6154,
       "ad_recognition_rate": 0.2308,
       "verbatims": [
-        "[FIXTURE \u2014 not a real response]",
+        "[FIXTURE — not a real response]",
         "I didn't realize that was an ad.",
         "Looked like a normal recommendation to me."
       ],
