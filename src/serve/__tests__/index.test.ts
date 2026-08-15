@@ -460,3 +460,114 @@ test("every seeded publisher can be served, end to end, as a dry run", async () 
     assert.equal(parseVerifiedProvenance(outside).length, 0, publisher.id);
   }
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// The Pricing agent's decision binds
+//
+// A skeptical review found the agent org "decides" while the company "does not
+// execute": Pricing computed 142 distinct prices and refused unprofitable
+// publishers, and none of it reached money because servePlacement charged a
+// hardcoded DEFAULT_PRICE_CENTS. These tests exist so that stays fixed. A
+// refusal that cannot stop a placement is not a decision.
+// ─────────────────────────────────────────────────────────────────────────────
+
+test("a Pricing refusal stops the placement — the charge does not happen", async () => {
+  const result = await servePlacement(
+    "ad_rinkpro",
+    "pub_rink-ops",
+    DRY_RUN,
+    base({
+      priceQuote: {
+        outcome: "refused_below_floor",
+        price_cents: null,
+        rationale: "publisher rev_share 0.85 exceeds gross margin",
+      },
+    }),
+  );
+
+  assert.equal(result.outcome, "refused");
+  assert.ok(!result.placement, "a refused serve must carry no placement");
+  assert.match(result.reason, /Pricing agent declined/);
+  assert.match(result.reason, /refused_below_floor/);
+  assert.match(result.reason, /exceeds gross margin/);
+});
+
+test("a Pricing refusal is distinguishable from a compliance refusal", async () => {
+  // Both refuse. If the reasons were interchangeable we could not tell a
+  // commercial decision from a safety one when reading the logs later.
+  const priced = await servePlacement(
+    "ad_rinkpro",
+    "pub_rink-ops",
+    DRY_RUN,
+    base({ priceQuote: { outcome: "no_viable_price", price_cents: null } }),
+  );
+  const blocked = await servePlacement(
+    "ad_rinkpro",
+    "pub_rink-ops",
+    DRY_RUN,
+    base({ review: { moderateFn: async () => flaggedModeration() } }),
+  );
+
+  assert.equal(priced.outcome, "refused");
+  assert.equal(blocked.outcome, "refused");
+  assert.match(priced.reason, /Pricing agent declined/);
+  assert.doesNotMatch(blocked.reason, /Pricing agent declined/);
+});
+
+test("a priced quote is what gets charged, not the default", async () => {
+  const result = await servePlacement(
+    "ad_rinkpro",
+    "pub_rink-ops",
+    DRY_RUN,
+    base({ priceQuote: { outcome: "market", price_cents: 7350 } }),
+  );
+
+  assert.equal(result.outcome, "dry_run");
+  assert.equal(result.placement?.price_cents, 7350);
+  assert.notEqual(result.placement?.price_cents, DEFAULT_PRICE_CENTS);
+});
+
+test("the agent's number outranks a caller-supplied one", async () => {
+  // Precedence matters: a caller passing priceCents must not silently override
+  // the agent that was asked to decide.
+  const result = await servePlacement(
+    "ad_rinkpro",
+    "pub_rink-ops",
+    DRY_RUN,
+    base({ priceCents: 2000, priceQuote: { outcome: "escalate", price_cents: 12500 } }),
+  );
+
+  assert.equal(result.placement?.price_cents, 12500);
+});
+
+test("with no quote the caller's price still applies, and the default is last", async () => {
+  const withCaller = await servePlacement(
+    "ad_rinkpro", "pub_rink-ops", DRY_RUN, base({ priceCents: 4200 }),
+  );
+  const withNeither = await servePlacement(
+    "ad_rinkpro", "pub_rink-ops", DRY_RUN, base(),
+  );
+
+  assert.equal(withCaller.placement?.price_cents, 4200);
+  assert.equal(withNeither.placement?.price_cents, DEFAULT_PRICE_CENTS);
+});
+
+test("a Pricing refusal never writes, even under LIVE_SERVE", async () => {
+  await withTempDir(async (dir) => {
+    const path = join(dir, "llms.txt");
+    await writeFile(path, BASE, "utf8");
+
+    const result = await servePlacement(
+      "ad_rinkpro",
+      "pub_rink-ops",
+      LIVE,
+      base({
+        llmsTxtPath: path,
+        priceQuote: { outcome: "refused_below_floor", price_cents: null },
+      }),
+    );
+
+    assert.equal(result.outcome, "refused");
+    assert.equal(await readFile(path, "utf8"), BASE, "the publisher file must be untouched");
+  });
+});

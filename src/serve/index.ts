@@ -128,6 +128,29 @@ export interface ServeOptions {
   /** Fixed timestamp so fixtures are deterministic. */
   servedAt?: string;
   priceCents?: number;
+  /**
+   * A pricing decision from the Pricing agent, enforced here.
+   *
+   * This exists because a skeptical review found the agent org "decides" while
+   * the company "does not execute": Pricing produced 142 distinct prices and
+   * refused unprofitable publishers, and none of it reached money because this
+   * function charged a hardcoded DEFAULT_PRICE_CENTS.
+   *
+   * When supplied, this quote BINDS:
+   *   - `price_cents: null` REFUSES the serve. A refusal to sell is the
+   *     clearest evidence the decision is real, so it has to be able to stop a
+   *     placement, not just be logged next to one.
+   *   - a number is charged instead of the default.
+   *
+   * Typed structurally rather than importing PriceQuote so that src/serve does
+   * not depend on src/company. Serving enforces the decision; it does not make
+   * it.
+   */
+  priceQuote?: {
+    outcome: string;
+    price_cents: number | null;
+    rationale?: string;
+  };
   stripePaymentRef?: string | null;
   /** Passed straight to reviewCreative — injectable moderation in tests. */
   review?: ReviewOptions;
@@ -360,13 +383,32 @@ export async function servePlacement(
   assertDisclosed(renderedBlock);
   assertDisclosed(llmsTxt);
 
+  // 7b. The Pricing agent's decision binds. A quote that declines to sell stops
+  //     the placement here — after the disclosure checks, so a refusal can
+  //     never be confused with a compliance failure in the logs.
+  const quote = options.priceQuote;
+  if (quote && quote.price_cents === null) {
+    const why = quote.rationale ? `: ${quote.rationale}` : "";
+    log(
+      `[adlayer:serve] REFUSED ${creativeId} on ${publisherId} — ` +
+        `Pricing declined to sell (${quote.outcome})${why}`,
+    );
+    return refusal(
+      `Pricing agent declined to sell this placement (${quote.outcome})${why}`,
+      { verdict, creative: reviewed, publisher, llmsTxtPath },
+    );
+  }
+
   const placement: Placement = {
     id: placementId(creativeId, publisher.id, servedAt),
     creative_id: creativeId,
     publisher_id: publisher.id,
     served_at: servedAt,
     rendered_block: renderedBlock,
-    price_cents: options.priceCents ?? DEFAULT_PRICE_CENTS,
+    // Precedence is deliberate: an agent's decision outranks a caller-supplied
+    // number, which outranks the default. The default is the last resort, not
+    // the norm.
+    price_cents: quote?.price_cents ?? options.priceCents ?? DEFAULT_PRICE_CENTS,
     stripe_payment_ref: options.stripePaymentRef ?? null,
   };
 
