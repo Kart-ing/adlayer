@@ -18,13 +18,18 @@
  * Run via tsx: `npm run measure` (LIVE_MEASURE=0 by default).
  */
 
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-import type { Placement, PropagationCheck, RunFlags } from "../contract.ts";
+import type { Creative, Placement, PropagationCheck, RunFlags } from "../contract.ts";
 import { DRY_RUN } from "../contract.ts";
-import { classify, type BaselineObservation } from "./classify-propagation.ts";
+import {
+  advertiserIdentity,
+  classify,
+  mentionsAdvertiser,
+  type BaselineObservation,
+} from "./classify-propagation.ts";
 import { DEFAULT_ENGINES, type EngineDef } from "./answer-engines.ts";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -143,7 +148,63 @@ export async function checkPropagation(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Pre-serve baseline capture (PRD-B §2.2). Establish, for every engine × query,
+// whether the advertiser is ALREADY present before we serve — so the classifier
+// can subtract organic presence and never mistake it for propagation.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Capture a baseline BEFORE the first serve. Presence is decided by the same
+ * `mentionsAdvertiser` logic the classifier uses. Must be run (and its output
+ * committed) before 13:00; live capture requires `flags.liveMeasure`. Offline it
+ * records the honest pre-serve assumption for a brand-new placement — invisible.
+ */
+export async function captureBaseline(
+  creative: Pick<Creative, "title" | "target_url">,
+  queries: string[],
+  flags: RunFlags,
+  opts: MeasureOptions = {},
+): Promise<BaselineMap> {
+  const engines = opts.engines ?? DEFAULT_ENGINES;
+  const adv = advertiserIdentity(creative.target_url, creative.title);
+  const map: BaselineMap = {};
+
+  for (const engine of engines) {
+    for (const query of queries) {
+      const key = keyFor(engine.name, query);
+      if (flags.liveMeasure) {
+        const ans = await engine.ask(query);
+        const present = mentionsAdvertiser(ans.answerText, ans.citedUrls, adv).present;
+        map[key] = { present, answer_excerpt: excerpt(ans.answerText), cited_urls: ans.citedUrls };
+      } else {
+        map[key] = {
+          present: false,
+          answer_excerpt: "[FIXTURE baseline — advertiser assumed invisible pre-serve]",
+          cited_urls: [],
+        };
+      }
+    }
+  }
+  return map;
+}
+
+/** Persist a baseline to `baseline.json`, stamped with a captured-at note. */
+export async function writeBaseline(map: BaselineMap, dir: string = FIXTURES_DIR): Promise<string> {
+  const out = path.join(dir, "baseline.json");
+  const payload: Record<string, unknown> = {
+    _note:
+      `Pre-serve baseline captured ${new Date().toISOString()}. Keyed "<engine>:<query>" ` +
+      `(query lowercased). Advertiser presence recorded BEFORE the first serve so measurement ` +
+      `can tell "was already there" from "appeared because of us".`,
+    ...map,
+  };
+  await writeFile(out, JSON.stringify(payload, null, 2) + "\n", "utf8");
+  return out;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Demo runner — `npm run measure`. Offline by default (LIVE_MEASURE=0).
+// `npm run measure -- --baseline [--write]` captures a pre-serve baseline.
 // ─────────────────────────────────────────────────────────────────────────────
 
 function flagsFromEnv(): RunFlags {
@@ -186,13 +247,41 @@ async function runDemo(): Promise<void> {
   );
 }
 
+async function runBaseline(): Promise<void> {
+  const flags = flagsFromEnv();
+  const creative = await loadJson<Pick<Creative, "title" | "target_url">>(
+    FIXTURES_DIR,
+    "demo-creative.json",
+  );
+  const queries = await loadJson<string[]>(FIXTURES_DIR, "demo-queries.json");
+  if (!creative || !queries) {
+    console.error("[baseline] demo fixtures missing under", FIXTURES_DIR);
+    process.exitCode = 1;
+    return;
+  }
+
+  const map = await captureBaseline(creative, queries, flags);
+  const present = Object.values(map).filter((o) => o.present).length;
+  console.log(
+    `[baseline] captured ${Object.keys(map).length} (engine×query) for ${creative.title} · ` +
+      `present=${present}` + (flags.liveMeasure ? "" : "  (dry — advertiser assumed invisible)"),
+  );
+
+  if (process.argv.includes("--write")) {
+    console.log("[baseline] wrote", await writeBaseline(map));
+  } else {
+    console.log("[baseline] not written — pass --write to persist to baseline.json");
+  }
+}
+
 const invokedDirectly =
   process.argv[1] !== undefined &&
   import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (invokedDirectly) {
-  runDemo().catch((err) => {
-    console.error("[measure] demo failed:", err);
+  const run = process.argv.includes("--baseline") ? runBaseline : runDemo;
+  run().catch((err) => {
+    console.error("[measure] failed:", err);
     process.exitCode = 1;
   });
 }

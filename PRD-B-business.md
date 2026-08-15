@@ -193,9 +193,15 @@ optional pre-serve baseline: `classify(answerText, citedUrls, placement, baselin
   sonar `surfaced_unlabeled` at 18m latency (the headline), a `cited_unattributed`, an `absent`;
   the openai ingestion arm all `absent`. `LIVE_MEASURE=1` with no keys degrades to `absent` without
   crashing.
-- **Remaining (deferred to the poll orchestration / Step 4):** a live `captureBaseline` helper and
-  the scheduler that appends to `AdLayerState.propagation[]` (the Render Workflow + Superserve
-  pause-between-polls wrapper around `checkPropagation`).
+- **Live baseline capture (done):** `captureBaseline(creative, queries, flags)` decides pre-serve
+  presence with the same `mentionsAdvertiser` logic the classifier uses (refactored into a shared,
+  exported helper), and `writeBaseline()` freezes it to `baseline.json`. CLI:
+  `npm run measure -- --baseline [--write]`.
+- **Poll scheduler (done):** `src/prove/poll.ts` — `pollOnce` (the discrete, resumable **Render
+  Workflow** step) and `pollLoop` (continuous, pausing a **Superserve** sandbox between polls via the
+  `SandboxController` seam), both appending to `AdLayerState.propagation[]` through `appendChecks`.
+  CLI: `npm run poll [-- --loop] [-- --write]`. Verified `--write` appends 6 checks per poll into
+  `web/data/state.json`.
 
 ### ✅ Step 3 — Terac (`src/prove/terac.ts` + `src/prove/study-design.ts`)
 Built and verified.
@@ -276,7 +282,7 @@ Built and verified against the real (test-mode) restricted key.
 - [x] `npx tsc --noEmit` clean
 - [x] Tests for all four classification states **plus** the false-positive case
 - [x] Runs fully offline with `LIVE_MEASURE=0`
-- [~] Pre-serve baseline consumed per query (fixture in place); live capture helper pending
+- [x] Pre-serve baseline consumed per query + live `captureBaseline`/`writeBaseline` helper
 - [ ] `docs/TERAC.md` with confirmed-vs-assumed marked *(already present)*
 - [x] Study wording passes a banned-leading-phrase assertion
 - [~] Terac arms modeled + before/after wired; judge→JSONL→aggregate loop verified; live launch needs deploy (Step 5)

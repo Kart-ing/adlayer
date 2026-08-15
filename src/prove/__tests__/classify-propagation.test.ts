@@ -7,7 +7,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-import { classify, classifyDetailed, type BaselineObservation } from "../classify-propagation.ts";
+import {
+  classify,
+  classifyDetailed,
+  advertiserIdentity,
+  mentionsAdvertiser,
+  type BaselineObservation,
+} from "../classify-propagation.ts";
 import { DISCLOSURE_TAG, DISCLOSURE_NOTICE, type Placement } from "../../contract.ts";
 
 // A distinctive one-line body — long and specific enough that an organic
@@ -114,6 +120,22 @@ test("unicode-bracket counterfeit label still registers the disclosure (red-team
   const { state, evidence } = classifyDetailed(answer, cited, placement());
   assert.equal(evidence.disclosure_present, true);
   assert.equal(state, "surfaced_labeled");
+});
+
+test("mentionsAdvertiser (shared by baseline capture) detects domain + brand", () => {
+  const adv = advertiserIdentity("https://acme.example", "Acme Board");
+  assert.equal(adv.domain, "acme.example");
+
+  const byDomain = mentionsAdvertiser("Some answer.", ["https://www.acme.example/x"], adv);
+  assert.equal(byDomain.domain_cited, true);
+  assert.equal(byDomain.present, true);
+
+  const byBrand = mentionsAdvertiser("Try Acme Board for this.", [], adv);
+  assert.equal(byBrand.brand_mentioned, true);
+  assert.equal(byBrand.present, true);
+
+  const absent = mentionsAdvertiser("Try Trello instead.", ["https://trello.com"], adv);
+  assert.equal(absent.present, false);
 });
 
 test("brand mention without domain or copy is a weak organic signal", () => {

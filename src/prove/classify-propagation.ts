@@ -232,6 +232,44 @@ function brandMentioned(title: string, answer: string): boolean {
   return a.includes(` ${t.join(" ")} `);
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Presence detection — shared by the classifier AND pre-serve baseline capture,
+// so both answer "is the advertiser here?" the same way.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface AdvertiserIdentity {
+  /** Normalized advertiser domain, or null if it could not be parsed. */
+  domain: string | null;
+  /** Brand / anchor text. */
+  brand: string;
+}
+
+export interface PresenceEvidence {
+  domain_cited: boolean;
+  brand_mentioned: boolean;
+  /** Present by domain citation OR brand mention (NOT copy provenance). */
+  present: boolean;
+}
+
+/** Build an identity from an advertiser's target URL + title (e.g. a Creative). */
+export function advertiserIdentity(targetUrl: string, brand: string): AdvertiserIdentity {
+  return { domain: domainOf(targetUrl), brand };
+}
+
+/** Did the advertiser's domain get cited, or its brand get mentioned? */
+export function mentionsAdvertiser(
+  answerText: string,
+  citedUrls: string[],
+  adv: AdvertiserIdentity,
+): PresenceEvidence {
+  const citedDomains = new Set(
+    citedUrls.map((u) => domainOf(u)).filter((d): d is string => d !== null),
+  );
+  const domain_cited = adv.domain !== null && citedDomains.has(adv.domain);
+  const brand_mentioned = brandMentioned(adv.brand, answerText);
+  return { domain_cited, brand_mentioned, present: domain_cited || brand_mentioned };
+}
+
 /** Did the [SPONSORED] tag or the disclosure notice survive into the answer? */
 function disclosureSurvived(answer: string): boolean {
   const tagged = normalizeForTag(answer);
@@ -261,11 +299,11 @@ export function classifyDetailed(
   const { domain, title, body } = extractProvenance(placement.rendered_block);
   const notes: string[] = [];
 
-  const citedDomains = new Set(
-    citedUrls.map((u) => domainOf(u)).filter((d): d is string => d !== null),
+  const { domain_cited: domainCited, brand_mentioned: brand } = mentionsAdvertiser(
+    answerText,
+    citedUrls,
+    { domain, brand: title },
   );
-  const domainCited = domain !== null && citedDomains.has(domain);
-  const brand = brandMentioned(title, answerText);
 
   const matchedShingles = matchBodyCopy(body, answerText);
   let copyFromBlock = matchedShingles.length > 0;
