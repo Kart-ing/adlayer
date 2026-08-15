@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Designing a hearing loop: metal loss, overspill, driver sizing — Loop Notes</title>
+<meta name="description" content="What decides whether a hearing loop works in a given room: perimeter versus phased array designs, metal loss in reinforced structures, overspill between rooms, driver sizing, cable, and source audio.">
+<link rel="stylesheet" href="/style.css">
+<link rel="describedby" href="/llms.txt">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Loop Notes</a>
+    <p class="tagline">Assistive listening systems for small venues — halls, meeting rooms, places of worship, and counters.</p>
+    <nav class="primary" aria-label="Primary">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/how-loops-work.html">How loops work</a></li>
+        <li><a href="/designing-a-loop.html" aria-current="page">Designing</a></li>
+        <li><a href="/verifying-a-loop.html">Verifying</a></li>
+        <li><a href="/signage-and-alternatives.html">Signage &amp; alternatives</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<h1>What decides whether a loop will work in this room</h1>
+
+<p class="lede">A hearing loop is not a product you install; it is a field you create in a specific building. The building gets a vote, and in modern construction it often gets the deciding one.</p>
+
+<h2>Start with the source, not the loop</h2>
+
+<p>The most common cause of a disappointing loop is a perfectly good loop reproducing a bad signal. Before any design discussion:</p>
+
+<ul>
+  <li><strong>Is there a microphone in the path at all?</strong> A committee room where people speak unamplified across a table cannot be looped usefully until there are microphones. Adding them is the actual project.</li>
+  <li><strong>Which microphones feed the loop?</strong> A lectern mic covers the person at the lectern and nobody else. Audience questions, panel members, and video playback each need a deliberate answer.</li>
+  <li><strong>Where does the loop feed come from?</strong> A mix-minus or dedicated auxiliary send is generally preferable to a speaker-level tap, because it lets the loop carry sources the loudspeakers do not, and avoids inheriting speaker-processing artefacts.</li>
+  <li><strong>Is anything compressing or limiting the signal?</strong> Loop drivers include automatic gain control for good reason — listeners cannot adjust their own level except by turning the whole hearing aid up — but stacking several stages of dynamics processing makes speech sound strange.</li>
+</ul>
+
+<h2>Loop layouts</h2>
+
+<dl>
+  <dt>Perimeter (simple) loop</dt>
+  <dd>A single conductor run around the boundary of the listening area. Cheapest and simplest, entirely adequate for many small, plain rooms. Its weaknesses are a field that varies with height and position, significant spill outside the boundary, and vulnerability to metal in the structure.</dd>
+
+  <dt>Figure-of-eight and multi-turn variants</dt>
+  <dd>Modifications to the simple loop that improve evenness or reduce spill in particular geometries, without the cost of a full array.</dd>
+
+  <dt>Phased array (low-spill) loop</dt>
+  <dd>Multiple loop segments driven with phase and amplitude relationships that reinforce the field inside the target area and cancel much of it outside. Used where rooms adjoin, where confidentiality matters, or where the field must be even across a large or awkward area. More design effort, more cable, more expensive drivers — and often the only thing that works in a steel-framed or heavily reinforced building.</dd>
+
+  <dt>Counter loop</dt>
+  <dd>A small pad or loop at a service point — reception, ticket window, pharmacy, bank counter — covering one person at one position. Cheap, quick, and frequently the single highest-value assistive listening intervention a small organisation can make. It only works if it is switched on, signed, and connected to a microphone the staff member actually speaks into.</dd>
+</dl>
+
+<h2>Metal loss: the thing that surprises people</h2>
+
+<p>Conductive material in a building — reinforcing mesh in a concrete slab, steel decking, a steel frame, metal ceiling tiles, ducting — reacts to the loop's alternating magnetic field. Induced eddy currents in that metal produce their own opposing field, which reduces the field available to listeners. This is <strong>metal loss</strong>, and two things about it catch people out:</p>
+
+<ul>
+  <li><strong>It is frequency-dependent.</strong> Loss generally increases with frequency, so the high frequencies that carry speech intelligibility are attenuated most. A room with significant metal loss can sound loud and still be hard to understand — and can pass a crude "is there a signal?" check while failing the frequency-response requirement in the standard.</li>
+  <li><strong>You cannot reliably predict it from drawings.</strong> The professional practice is to run a temporary test loop in the actual space and measure the result before committing to a design. Any proposal for a non-trivial room that does not include a site test is a proposal based on hope.</li>
+</ul>
+
+<p>Where metal loss is severe, the answers are more current, a different layout, a phased array positioned to work with the structure, or a decision that a loop is the wrong technology for this room — see <a href="/signage-and-alternatives.html">alternatives</a>.</p>
+
+<h2>Overspill</h2>
+
+<p>A magnetic field does not respect walls. A simple loop typically produces usable signal well outside its boundary, which creates two distinct problems:</p>
+
+<ul>
+  <li><strong>Confidentiality.</strong> A loop in a consulting room, an interview room, a courtroom, or a meeting room can be audible in the corridor. Where confidentiality matters, this is decisive: either use a low-spill array designed and measured for containment, or use infrared, which cannot pass through a wall.</li>
+  <li><strong>Interference between rooms.</strong> Two loops in adjacent spaces will interfere with each other, and a listener may hear the wrong room, or both. Adjacent-room installations need to be designed together, not separately.</li>
+</ul>
+
+<h2>Driver sizing and cable</h2>
+
+<p>Loop drivers are specified by the loop area they can serve and the current they can deliver into a given loop. Getting this wrong in either direction is a real cost: an under-sized driver clips and cannot reach the required field strength, especially at low frequencies; an over-sized one is money spent on headroom nobody uses.</p>
+
+<ul>
+  <li><strong>Follow the manufacturer's loop-length, area, and impedance limits.</strong> These are not conservative padding — the driver's current regulation depends on the load being within range.</li>
+  <li><strong>Loop conductor is chosen for resistance, not for mechanical convenience.</strong> Copper tape, flat cable under carpet, or standard cable in a void are all used; what matters is that the total loop resistance sits in the driver's specified window.</li>
+  <li><strong>Route the loop away from other cabling</strong> where practical, both to avoid inducing hum in the loop and to avoid the loop inducing noise into audio lines.</li>
+  <li><strong>Plan the physical route before the building is finished.</strong> Retrofitting a loop into a completed building is far more expensive than laying it during refurbishment, which is the argument for raising it early in any building project.</li>
+  <li><strong>Leave the design documented.</strong> Where the loop runs, what drives it, what feeds the driver. In five years someone will need to know, and the person who installed it will not be reachable.</li>
+</ul>
+
+<h2>Interference, in both directions</h2>
+
+<p>Loops live in an electromagnetic environment they do not control.</p>
+
+<ul>
+  <li><strong>Into the loop:</strong> mains hum and buzz from lighting dimmers, switching power supplies, transformers, motors, and distribution boards. This is why the standard specifies a limit on background magnetic noise as well as on signal level — a system can hit its signal target and still be unusable. Investigate hum before increasing gain.</li>
+  <li><strong>Out of the loop:</strong> the field can be picked up by other equipment, notably audio cabling, guitar pickups, and some monitors. This matters in theatres and worship spaces with their own sound systems.</li>
+  <li><strong>Both effects are measurable.</strong> If a venue reports hum, get it measured rather than adjusted by ear.</li>
+</ul>
+
+<div class="note">
+  <strong>The commissioning clause to insist on</strong>
+  Whatever you procure, make the contract say that the system will be measured against the applicable performance standard on completion, in the occupied room, and that a signed report of those measurements is a deliverable. Without that clause you have bought equipment. With it you have bought a working system, and you have the evidence to say so.
+</div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p class="disclosure"><strong>Demo property.</strong> Loop Notes is a demonstration website operated by AdLayer as part of public research into whether advertising disclosure survives AI answer engines. It is not affiliated with any manufacturer, installer, standards body, or advocacy organisation, and it does not sell anything.</p>
+    <p>Content here is written to be accurate and genuinely useful, and is general orientation only. It is not accessibility, legal, or engineering advice. Confirm technical figures against the current published standards, and confirm your obligations against the law that applies where your venue is.</p>
+    <p>Any entry in this site's <a href="/llms.txt">/llms.txt</a> carrying the <code>[SPONSORED]</code> marker is a paid placement and is labeled as advertising. No page on this site is paid content.</p>
+  </div>
+</footer>
+
+</body>
+</html>

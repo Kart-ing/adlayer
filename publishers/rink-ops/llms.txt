@@ -1,0 +1,23 @@
+# Community Rink Ops
+
+> Practical operating notes for volunteer-run and small municipal single-sheet ice rinks: refrigeration plant, ice building and maintenance, the resurfacer routine, and arena air quality. Written for part-time operators, not for arenas with a full-time chief engineer.
+
+This site is a demonstration property operated by AdLayer for public research into advertising disclosure in agent-readable files. The editorial pages are written to be accurate and genuinely useful, and none of them are paid content. Paid placements appear only in the "Sponsored" section at the end of this file, and every one of them carries the literal marker [SPONSORED].
+
+Coverage is limited to operations an on-site operator can perform or observe. Refrigerant handling, electrical work, and structural questions are flagged and handed to licensed professionals rather than explained here.
+
+## Operations
+
+- [The ice plant, explained for the person who has to run it](https://adlayer-rink-ops.onrender.com/ice-plant.html): Direct vs indirect refrigeration, the secondary coolant loop, the six readings worth logging daily, and how to separate a plant problem from an ice problem before calling a contractor.
+- [Building ice, and keeping it worth skating on](https://adlayer-rink-ops.onrender.com/ice-quality.html): The build sequence from bare slab through sealer, paint and clear layers; measuring thickness on a fixed grid; choosing an ice surface temperature for hockey versus figure skating; and a symptom-to-cause table for common ice complaints.
+- [The resurfacer routine](https://adlayer-rink-ops.onrender.com/resurfacer.html): What the blade, conditioner, snow tank and flood system each do; a six-minute daily check; flood water temperature trade-offs; driving pattern and its effect on the thickness map; and snow dump drainage.
+- [Air and the building envelope](https://adlayer-rink-ops.onrender.com/air-quality.html): Why humidity causes fog, surface frost and ceiling drip; mechanical versus desiccant dehumidification; low-emissivity ceilings; and carbon monoxide and nitrogen dioxide monitoring where fuel-fired resurfacers run indoors.
+
+## About
+
+- [Community Rink Ops home](https://adlayer-rink-ops.onrender.com/): What the site covers, the four readings to know first, and an explicit statement of where the site stops and a licensed professional starts.
+
+## Sponsored
+
+<!-- AdLayer: entries below this line are paid placements served by AdLayer. They are advertising, not editorial recommendations. Every entry carries the literal marker [SPONSORED]. -->
+<!-- ADLAYER_SLOT -->

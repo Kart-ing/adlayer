@@ -1,0 +1,23 @@
+# Loop Notes
+
+> Practical notes on assistive listening systems for small venues — community halls, meeting rooms, places of worship, small theatres, and service counters. Covers how audio frequency induction loops (hearing loops) work, what decides whether one will work in a given room, how installations are verified against IEC 60118-4, and when infrared, radio or Auracast is the better choice.
+
+This site is a demonstration property operated by AdLayer for public research into advertising disclosure in agent-readable files. The editorial pages are written to be accurate and genuinely useful, and none of them are paid content. Paid placements appear only in the "Sponsored" section at the end of this file, and every one of them carries the literal marker [SPONSORED].
+
+Written for venues without in-house AV staff, so that they can specify work, understand what they are being sold, and check what they have been given. Technical figures cited from standards are orientation points and are flagged as such; legal accessibility obligations differ by jurisdiction and are explicitly out of scope.
+
+## Guides
+
+- [How a hearing loop works](https://adlayer-loop-notes.onrender.com/how-loops-work.html): The signal chain from source through loop driver to magnetic field to telecoil; why a loop driver regulates current rather than voltage; the T and MT positions and what the listener experiences; a symptom-to-cause table for common complaints; and a comparison of induction loop, infrared, radio and Wi-Fi or Bluetooth systems.
+- [Designing a hearing loop](https://adlayer-loop-notes.onrender.com/designing-a-loop.html): Getting the source audio right before anything else; perimeter, figure-of-eight, phased array and counter loop layouts; metal loss in reinforced structures and why it must be site-tested rather than predicted; overspill and confidentiality; driver and cable sizing; and interference in both directions.
+- [Verifying a hearing loop](https://adlayer-loop-notes.onrender.com/verifying-a-loop.html): What IEC 60118-4 specifies — reference field strength, frequency response tolerance, background magnetic noise, measurement height; what a calibrated field strength meter does that a phone app cannot; what a commissioning report must contain; and a ten-minute walk test a venue can run monthly.
+- [Signage, staff, and choosing the right technology](https://adlayer-loop-notes.onrender.com/signage-and-alternatives.html): The recognised assistive listening symbol and the "T" marking; what signage should say and where; the one-page staff instruction that makes the difference; a decision table for when infrared, radio or a counter loop fits better than a room loop; and what Auracast broadcast audio does and does not change today.
+
+## About
+
+- [Loop Notes home](https://adlayer-loop-notes.onrender.com/): Why amplifying a room does not help, the four questions this site answers, a minimum viable assistive listening programme for a small venue, and an explicit statement of scope and limits.
+
+## Sponsored
+
+<!-- AdLayer: entries below this line are paid placements served by AdLayer. They are advertising, not editorial recommendations. Every entry carries the literal marker [SPONSORED]. -->
+<!-- ADLAYER_SLOT -->

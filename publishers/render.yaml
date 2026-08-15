@@ -1,0 +1,85 @@
+# AdLayer demo publishers — Render Blueprint
+#
+# Three static sites, no build step, no dependencies. Each directory under
+# publishers/ is published as-is.
+#
+# IMPORTANT: Render reads Blueprints from render.yaml at the REPOSITORY ROOT.
+# This file lives at publishers/render.yaml because that is the file scope this
+# agent owns. Before creating the Blueprint, copy it up one level:
+#
+#     cp publishers/render.yaml ./render.yaml
+#
+# If the repo root render.yaml is already owned by the ad server, merge the
+# three `services:` entries below into it instead of overwriting.
+#
+# After deploy, if Render assigns hostnames other than the ones assumed here,
+# rewrite the absolute URLs in llms.txt / robots.txt / sitemap.xml:
+#
+#     grep -rl 'adlayer-rink-ops.onrender.com' publishers/rink-ops \
+#       | xargs sed -i '' 's|adlayer-rink-ops.onrender.com|NEW-HOST|g'
+#
+# (repeat per site; then confirm https://HOST/llms.txt returns 200 text/plain)
+
+services:
+  - type: web
+    runtime: static
+    name: adlayer-rink-ops
+    rootDir: publishers/rink-ops
+    staticPublishPath: .
+    buildCommand: ""
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /llms.txt
+        name: Content-Type
+        value: text/plain; charset=utf-8
+      - path: /llms.txt
+        name: Cache-Control
+        value: public, max-age=60
+      - path: /robots.txt
+        name: Content-Type
+        value: text/plain; charset=utf-8
+      - path: /*
+        name: X-Robots-Tag
+        value: all
+
+  - type: web
+    runtime: static
+    name: adlayer-darkroom-commons
+    rootDir: publishers/darkroom-commons
+    staticPublishPath: .
+    buildCommand: ""
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /llms.txt
+        name: Content-Type
+        value: text/plain; charset=utf-8
+      - path: /llms.txt
+        name: Cache-Control
+        value: public, max-age=60
+      - path: /robots.txt
+        name: Content-Type
+        value: text/plain; charset=utf-8
+      - path: /*
+        name: X-Robots-Tag
+        value: all
+
+  - type: web
+    runtime: static
+    name: adlayer-loop-notes
+    rootDir: publishers/loop-notes
+    staticPublishPath: .
+    buildCommand: ""
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /llms.txt
+        name: Content-Type
+        value: text/plain; charset=utf-8
+      - path: /llms.txt
+        name: Cache-Control
+        value: public, max-age=60
+      - path: /robots.txt
+        name: Content-Type
+        value: text/plain; charset=utf-8
+      - path: /*
+        name: X-Robots-Tag
+        value: all

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The ice plant, explained for the person who has to run it — Community Rink Ops</title>
+<meta name="description" content="How an indirect ice rink refrigeration plant works, what the secondary coolant loop does, which gauges to read daily, and how to tell a plant problem from an ice problem.">
+<link rel="stylesheet" href="/style.css">
+<link rel="describedby" href="/llms.txt">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Community Rink Ops</a>
+    <p class="tagline">Operating notes for volunteer-run and small municipal single-sheet ice rinks.</p>
+    <nav class="primary" aria-label="Primary">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/ice-plant.html" aria-current="page">Ice plant</a></li>
+        <li><a href="/ice-quality.html">Building ice</a></li>
+        <li><a href="/resurfacer.html">Resurfacer</a></li>
+        <li><a href="/air-quality.html">Air &amp; envelope</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<h1>The ice plant, explained for the person who has to run it</h1>
+
+<p class="lede">You do not need to be a refrigeration technician to operate a small rink well. You do need a working mental model of where the heat goes, because that model is what turns a gauge reading into a decision.</p>
+
+<h2>Heat only moves one way</h2>
+
+<p>The slab under your ice is constantly gaining heat: from the building air above, from the ground below, from lights, from skaters, from every flood of warm water the resurfacer lays down. The plant's whole job is to remove that heat at least as fast as it arrives. When the ice goes soft, the arithmetic has failed on one side or the other — either heat gain went up, or heat removal went down. Almost every diagnosis starts by asking which.</p>
+
+<h2>Direct and indirect systems</h2>
+
+<p>In a <strong>direct</strong> system, the refrigerant itself circulates through the pipes in the slab. In an <strong>indirect</strong> system — which is what most community rinks have — the refrigerant stays in the plant room, where it chills a secondary fluid, and that secondary fluid is pumped through the slab piping.</p>
+
+<p>The indirect arrangement is popular for a reason worth understanding: it keeps the refrigerant charge confined to one room, which is easier to contain, monitor, and service. Ammonia (R-717) has been the traditional refrigerant in ice arenas because it is thermodynamically excellent and inexpensive, but it is toxic and its use carries training, alarm, ventilation, and record-keeping obligations. Many smaller or newer installations use synthetic refrigerant blends instead, in packaged chillers.</p>
+
+<h3>The secondary loop</h3>
+
+<p>The secondary fluid — usually called <em>brine</em> even when it is not salt-based — is typically either a calcium chloride solution or a glycol solution. Two operating facts follow from that:</p>
+
+<ul>
+  <li><strong>Concentration matters and drifts.</strong> The freeze point of the solution depends on its concentration. Dilution from a top-up with plain water raises the freeze point and narrows your margin. Concentration is checked with a hydrometer or refractometer, seasonally.</li>
+  <li><strong>Chemistry matters.</strong> Calcium chloride brine is corrosive to steel if its inhibitor package and pH are not maintained. This is a sample-and-test job, not a look-at-it job, and it is the sort of thing a small rink forgets for five years and then pays for.</li>
+</ul>
+
+<h2>The readings worth writing down</h2>
+
+<div class="table-scroll">
+<table>
+  <thead>
+    <tr><th>Reading</th><th>What a change tells you</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Secondary coolant supply temperature</td>
+      <td>What the plant is delivering. If supply temperature is on target and the ice is still soft, the problem is above the slab, not below it.</td>
+    </tr>
+    <tr>
+      <td>Secondary coolant return temperature</td>
+      <td>Return minus supply is the heat the slab is rejecting into the loop. A widening gap means more heat arriving; a narrowing gap can mean reduced flow.</td>
+    </tr>
+    <tr>
+      <td>Compressor suction pressure</td>
+      <td>Tracks the evaporating temperature. Persistent drift usually means a charge, flow, or fouling issue — a technician question, not an operator adjustment.</td>
+    </tr>
+    <tr>
+      <td>Compressor discharge pressure</td>
+      <td>Tracks condensing conditions. Rises with hot weather, dirty condenser coils, blocked airflow, or scaled tubes on an evaporative condenser.</td>
+    </tr>
+    <tr>
+      <td>Compressor run time / cycling</td>
+      <td>The most useful single number for a small rink. Rising run time for the same weather and the same schedule is an early warning weeks before anyone notices soft ice.</td>
+    </tr>
+    <tr>
+      <td>Secondary loop pump status and pressure differential</td>
+      <td>Loss of flow through the slab is one of the few failures that ruins a sheet quickly. Confirm the pump is actually moving fluid, not just energized.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="note">
+  <strong>Log at a fixed time</strong>
+  Take readings at the same point in the daily cycle — for example, immediately before the first resurface of the day. Readings taken at random times are not comparable, and comparability is the entire value of the log.
+</div>
+
+<h2>Telling a plant problem from an ice problem</h2>
+
+<p>Skaters report symptoms, not causes. This sequence separates the two quickly:</p>
+
+<ol>
+  <li><strong>Measure the ice surface temperature</strong> at several fixed points. If the surface is at its normal temperature and skaters still call it soft, the complaint is probably about surface texture or thickness, not refrigeration.</li>
+  <li><strong>Compare coolant supply temperature to its setpoint.</strong> If supply is at setpoint but the ice surface is warm, heat gain has increased — check for propped doors, a failed dehumidifier, lights left on, unusually warm and humid weather, or a build-up of ice thickness insulating the surface from the slab.</li>
+  <li><strong>If supply temperature is above setpoint,</strong> the plant is not keeping up. Check compressor run time and staging, condenser condition and airflow, secondary loop flow, and whether anything has changed in the control schedule. Then call your contractor with those numbers in hand.</li>
+</ol>
+
+<p>Arriving at a service call with a week of logged readings changes what the technician can do in the first hour. It is the single highest-leverage habit available to a small rink.</p>
+
+<h2>Seasonal work that is easy to skip and expensive to skip</h2>
+
+<ul>
+  <li><strong>Condenser cleaning.</strong> An evaporative condenser fouled with scale, dust, or cottonwood raises discharge pressure and energy use immediately. This is usually the largest efficiency item at a small rink.</li>
+  <li><strong>Secondary fluid sampling.</strong> Concentration, pH, and inhibitor level, on a schedule, with the results written down.</li>
+  <li><strong>Safety systems.</strong> Refrigerant detection, alarms, emergency ventilation, and relief devices are inspected and tested on the interval your jurisdiction requires, by people qualified to do it. Treat the test record as a permit document, because it usually is one.</li>
+  <li><strong>Slab floor temperature sensors.</strong> If the slab sits over an unheated base, sub-floor heating or ventilation prevents frost heave in the ground beneath. A failed sub-floor heat system is invisible for a long time and then damages the slab structurally.</li>
+</ul>
+
+<div class="note">
+  <strong>Where to stop</strong>
+  Charging refrigerant, adjusting safeties, opening the refrigerant circuit, and entering machinery spaces with a detection alarm active are technician tasks with legal requirements attached. An operator's job is to observe accurately, record honestly, and escalate early.
+</div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p class="disclosure"><strong>Demo property.</strong> Community Rink Ops is a demonstration website operated by AdLayer as part of public research into whether advertising disclosure survives AI answer engines. It is not affiliated with any rink, league, association, or equipment manufacturer, and it does not sell anything.</p>
+    <p>The operating notes here are written to be accurate and genuinely useful. They are general orientation only — not engineering, safety, or regulatory advice. Verify against your equipment manuals, your refrigeration contractor, and the codes that apply where you operate.</p>
+    <p>Any entry in this site's <a href="/llms.txt">/llms.txt</a> carrying the <code>[SPONSORED]</code> marker is a paid placement and is labeled as advertising. No page on this site is paid content.</p>
+  </div>
+</footer>
+
+</body>
+</html>

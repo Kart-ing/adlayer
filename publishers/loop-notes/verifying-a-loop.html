@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verifying a hearing loop: IEC 60118-4, field strength, the walk test — Loop Notes</title>
+<meta name="description" content="Why a hearing loop installation is not finished until it is measured: what IEC 60118-4 covers, what a field strength meter does, what a commissioning report should contain, and a walk test any venue can run.">
+<link rel="stylesheet" href="/style.css">
+<link rel="describedby" href="/llms.txt">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">Loop Notes</a>
+    <p class="tagline">Assistive listening systems for small venues — halls, meeting rooms, places of worship, and counters.</p>
+    <nav class="primary" aria-label="Primary">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/how-loops-work.html">How loops work</a></li>
+        <li><a href="/designing-a-loop.html">Designing</a></li>
+        <li><a href="/verifying-a-loop.html" aria-current="page">Verifying</a></li>
+        <li><a href="/signage-and-alternatives.html">Signage &amp; alternatives</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+<h1>How you know it works</h1>
+
+<p class="lede">A hearing loop is invisible, inaudible to most of the people responsible for it, and used by people who are unlikely to complain to staff. That combination is why measurement is not optional and why "it was working when we installed it" is not a status report.</p>
+
+<h2>The standard</h2>
+
+<p><strong>IEC 60118-4</strong> is the international standard covering the performance of audio frequency induction loop systems for hearing aids. It is the document a commissioning report should reference, and it is what "compliant loop" ought to mean. Broadly, it specifies:</p>
+
+<ul>
+  <li>A <strong>reference field strength</strong> that the system should produce for an average programme level, expressed as a magnetic field strength in amperes per metre — commonly cited as 400 mA/m at 1 kHz, with the standard also addressing peak capability above that.</li>
+  <li>A <strong>frequency response tolerance</strong> — the field strength must stay within a specified band, commonly cited as ±3 dB, across a specified frequency range for speech intelligibility. This is the requirement that metal loss most often breaks.</li>
+  <li>A <strong>limit on background magnetic noise</strong>, so that hum and buzz from the building do not swamp the signal.</li>
+  <li>The <strong>measurement height and method</strong>, so that results are comparable — measurements are taken at a defined listening height rather than at the floor or at the loop.</li>
+</ul>
+
+<div class="note">
+  <strong>Confirm the numbers against the standard itself</strong>
+  The figures above are the ones generally quoted in the industry, but standards are revised, national annexes exist, and some jurisdictions impose their own requirements on top. Treat these values as orientation for understanding a report — not as a specification to procure against. Buy or consult the current published version, or require your installer to cite it explicitly and by edition.
+</div>
+
+<h2>What actually gets measured</h2>
+
+<p>Verification uses a calibrated <strong>field strength meter</strong> — an instrument with a reference pickup coil and defined weighting, not a hearing aid and not a phone app. Loop receivers sold as listening aids are useful for a quick presence check; they are not measuring instruments and will not tell you whether a room passes.</p>
+
+<p>A commissioning engineer typically:</p>
+
+<ol>
+  <li>Feeds a defined test signal through the system at a normal operating level.</li>
+  <li>Measures field strength at a grid of points across the listening area, at the specified listening height, recording the value at each.</li>
+  <li>Sweeps or steps through frequencies to confirm the response stays inside the tolerance band — particularly at the top of the range, where metal loss bites.</li>
+  <li>Measures background magnetic noise with the system silent, and with the building in its normal operating state: lights on, dimmers at typical settings, HVAC running.</li>
+  <li>Checks each source routed into the loop, not just the one that was convenient on the day.</li>
+  <li>Records the results, the instrument used, its calibration date, and the standard and edition applied.</li>
+</ol>
+
+<h3>What a report should contain</h3>
+
+<div class="table-scroll">
+<table>
+  <thead>
+    <tr><th>Item</th><th>Why it matters</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Date, venue, room, and who performed the test</td><td>It is a dated statement about one room, not a certificate for a building.</td></tr>
+    <tr><td>Standard and edition applied</td><td>"Compliant" is meaningless without saying with what.</td></tr>
+    <tr><td>Instrument and calibration date</td><td>An uncalibrated meter produces an opinion.</td></tr>
+    <tr><td>Coverage map or point-by-point results</td><td>A single reading at the best seat is the most common way a bad system passes.</td></tr>
+    <tr><td>Frequency response results</td><td>Where metal loss shows up, and the part most often quietly omitted.</td></tr>
+    <tr><td>Background noise measurement</td><td>Determines whether the system is usable in practice.</td></tr>
+    <tr><td>Sources tested, and settings used</td><td>So the venue knows what was proven and what was not.</td></tr>
+    <tr><td>Any areas that do not comply, stated plainly</td><td>A report with no exceptions in a difficult building deserves scepticism.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>The walk test any venue can do</h2>
+
+<p>Measurement is a specialist job. Routine checking is not, and it is the part that decides whether the system is working on the day someone needs it. With an inexpensive loop listener — a small receiver with headphones, sold for exactly this purpose — a member of staff can, in ten minutes:</p>
+
+<ol>
+  <li>Turn the system on and confirm any indicator light or level meter on the driver behaves as expected.</li>
+  <li>Have someone speak into each microphone in turn, naming which one they are using.</li>
+  <li>Walk the whole seating area with the listener, including the back row, the sides, and any balcony or overflow area, listening for level, clarity, and dead spots.</li>
+  <li>Listen with nobody speaking, for hum or buzz — and note anything that has changed in the building since last time, such as new lighting.</li>
+  <li>Check the areas <em>outside</em> the room where confidentiality matters, and note if the signal is audible there.</li>
+  <li>Write the date, the result, and the tester's name in the venue's log.</li>
+</ol>
+
+<p>Do this monthly if the room is in regular use, and always after electrical work, lighting changes, AV changes, or building work. Most loop faults are discovered this way, or not at all.</p>
+
+<h2>The failure modes a check catches</h2>
+
+<ul>
+  <li><strong>The driver is switched off,</strong> or its power has been unplugged for a vacuum cleaner and never restored. This is the single most common fault.</li>
+  <li><strong>The source has been re-patched.</strong> Somebody rearranged the desk for an event and the loop feed never came back.</li>
+  <li><strong>A microphone was replaced</strong> and its routing to the loop was not reinstated.</li>
+  <li><strong>New lighting has introduced hum</strong>, often after an LED or dimmer retrofit.</li>
+  <li><strong>The loop conductor has been damaged</strong> by building work — a drilled floor, a lifted carpet, a new partition.</li>
+  <li><strong>A new partition wall</strong> has changed the room, and the field no longer covers the seats that exist now.</li>
+  <li><strong>Nobody knows how to turn it on.</strong> Not a fault, but it fails identically from the user's side.</li>
+</ul>
+
+<h2>Make it someone's job</h2>
+
+<p>The durable arrangement in a small venue is: one named role owns the check, a one-page instruction lives with the equipment, the log is kept where the equipment is, and the periodic professional verification is booked on a recurring calendar entry rather than remembered. None of that is technical work, and it is what separates venues whose loops work from venues that have loops.</p>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <p class="disclosure"><strong>Demo property.</strong> Loop Notes is a demonstration website operated by AdLayer as part of public research into whether advertising disclosure survives AI answer engines. It is not affiliated with any manufacturer, installer, standards body, or advocacy organisation, and it does not sell anything.</p>
+    <p>Content here is written to be accurate and genuinely useful, and is general orientation only. It is not accessibility, legal, or engineering advice. Confirm technical figures against the current published standards, and confirm your obligations against the law that applies where your venue is.</p>
+    <p>Any entry in this site's <a href="/llms.txt">/llms.txt</a> carrying the <code>[SPONSORED]</code> marker is a paid placement and is labeled as advertising. No page on this site is paid content.</p>
+  </div>
+</footer>
+
+</body>
+</html>

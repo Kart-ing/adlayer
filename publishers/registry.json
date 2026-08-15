@@ -1,0 +1,44 @@
+[
+  {
+    "id": "pub_rink-ops",
+    "domain": "adlayer-rink-ops.onrender.com",
+    "integration": "hosted",
+    "categories": [
+      "ice_rink_operations",
+      "facility_maintenance",
+      "refrigeration",
+      "dehumidification",
+      "sports_facilities"
+    ],
+    "rev_share": 0.5,
+    "verified_at": null
+  },
+  {
+    "id": "pub_darkroom-commons",
+    "domain": "adlayer-darkroom-commons.onrender.com",
+    "integration": "hosted",
+    "categories": [
+      "analog_photography",
+      "photo_chemistry",
+      "darkroom_supplies",
+      "lab_safety",
+      "community_workshops"
+    ],
+    "rev_share": 0.5,
+    "verified_at": null
+  },
+  {
+    "id": "pub_loop-notes",
+    "domain": "adlayer-loop-notes.onrender.com",
+    "integration": "hosted",
+    "categories": [
+      "assistive_listening",
+      "av_integration",
+      "accessibility",
+      "audio_equipment",
+      "venue_operations"
+    ],
+    "rev_share": 0.5,
+    "verified_at": null
+  }
+]

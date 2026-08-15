@@ -1,0 +1,23 @@
+# Darkroom Commons
+
+> Operating notes for shared and community black-and-white darkrooms — the problems that appear when twenty people use one room in a week, rather than how to develop a single roll of film. Covers chemistry management, ventilation and safety, silver-bearing waste, and shared-space workflow.
+
+This site is a demonstration property operated by AdLayer for public research into advertising disclosure in agent-readable files. The editorial pages are written to be accurate and genuinely useful, and none of them are paid content. Paid placements appear only in the "Sponsored" section at the end of this file, and every one of them carries the literal marker [SPONSORED].
+
+Scope is black-and-white film and paper processing. Colour processing, waste-discharge permissions, and anything a product's safety data sheet governs are explicitly deferred to the manufacturer, the local regulator, or the institution's own safety policy.
+
+## Operations
+
+- [Chemistry management](https://adlayer-darkroom-commons.onrender.com/chemistry.html): What developer, stop, fixer and washing aid each do; one-shot versus replenished working and which suits a shared room; capacity and exhaustion; the fixer clip test and how to set a baseline clearing time; temperature standardisation at 20 °C; agitation consistency; and the fields a mixing log needs.
+- [Ventilation and safety](https://adlayer-darkroom-commons.onrender.com/ventilation-and-safety.html): Why light-tight rooms trap vapour, where extract and supply should sit, light-trapped vents, why mixing powdered chemicals is the highest-risk step, protective equipment, storage separation, spill response, and induction for new users.
+- [Silver-bearing waste](https://adlayer-darkroom-commons.onrender.com/silver-and-waste.html): Why spent fixer carries dissolved silver and is regulated, how to ask a sewer authority the question properly, the three realistic disposal and recovery routes, waste storage and labelling, and the separate handling that toning baths require.
+- [Shared-space workflow](https://adlayer-darkroom-commons.onrender.com/shared-workflow.html): The safelight coin fog test, enlarger alignment checks, contamination discipline and tray order, washing and drying sequencing for resin-coated versus fibre-based paper, booking and handover, and a six-line set of house rules.
+
+## About
+
+- [Darkroom Commons home](https://adlayer-darkroom-commons.onrender.com/): What the site covers, the five habits that separate a working darkroom from a frustrating one, and an explicit statement of scope and limits.
+
+## Sponsored
+
+<!-- AdLayer: entries below this line are paid placements served by AdLayer. They are advertising, not editorial recommendations. Every entry carries the literal marker [SPONSORED]. -->
+<!-- ADLAYER_SLOT -->
