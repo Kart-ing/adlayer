@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AdLayer — demo reel</title>
+<style>
+  :root{
+    --ground:#F4F6F8;
+    --ink:#14181D;
+    --amber:#C2740A;
+    --green:#1F6F4A;
+    --red:#A32B1E;
+    --muted:#5C6672;
+    --hair:#D6DBE1;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--ground);color:var(--ink);overflow:hidden}
+  body{
+    font-family:var(--sans);
+    font-variant-numeric:tabular-nums lining-nums;
+    -webkit-font-smoothing:antialiased;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .frame{position:relative;width:1920px;height:1080px;transform-origin:50% 50%;background:var(--ground);overflow:hidden}
+
+  /* ---------- HUD ---------- */
+  .bar{position:absolute;top:0;left:0;right:0;height:4px;background:#E3E7EB;z-index:40}
+  .bar > i{display:block;height:100%;width:0;background:var(--amber)}
+  .ticks{position:absolute;top:0;left:0;right:0;height:4px;z-index:41;pointer-events:none}
+  .ticks > b{position:absolute;top:0;width:1px;height:4px;background:var(--ground);opacity:.85}
+  .hud{
+    position:absolute;bottom:34px;right:52px;z-index:40;
+    font-family:var(--mono);font-size:15px;letter-spacing:.06em;color:#98A2AE;
+    display:flex;gap:18px;align-items:center;
+  }
+  .hud .pz{color:var(--amber);font-weight:600;visibility:hidden}
+  body.paused .hud .pz{visibility:visible}
+  .keys{
+    position:absolute;bottom:34px;left:52px;z-index:40;
+    font-family:var(--mono);font-size:14px;letter-spacing:.05em;color:#B3BCC6;
+  }
+
+  /* ---------- slide system ---------- */
+  .slide{
+    position:absolute;inset:0;
+    padding:120px 128px 110px;
+    display:none;flex-direction:column;justify-content:center;
+  }
+  .slide.active{display:flex}
+  .r{opacity:0}
+  .slide.active .r{animation:rise .62s cubic-bezier(.2,.7,.25,1) both;animation-delay:var(--d,0s)}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .fade{opacity:0}
+  .slide.active .fade{animation:fade .8s ease both;animation-delay:var(--d,0s)}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+
+  /* ---------- type ---------- */
+  .eyebrow{
+    font-family:var(--mono);font-size:19px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--amber);margin-bottom:38px;
+  }
+  .eyebrow.grey{color:var(--muted)}
+  h1{font-family:var(--serif);font-size:158px;line-height:.94;letter-spacing:-.028em;font-weight:400}
+  .lede{font-family:var(--serif);font-size:76px;line-height:1.16;letter-spacing:-.018em;font-weight:400;max-width:1500px}
+  .lede.sm{font-size:60px}
+  .sub{font-family:var(--serif);font-size:46px;line-height:1.3;color:var(--muted);font-weight:400}
+  .cap{font-family:var(--sans);font-size:27px;line-height:1.45;color:var(--muted);max-width:1180px}
+  .cap b{color:var(--ink);font-weight:600}
+  .rule{height:3px;background:var(--amber);width:132px;margin:44px 0}
+  .rule.thin{height:1px;background:var(--hair);width:100%;margin:0}
+  .mono{font-family:var(--mono)}
+  .amber{color:var(--amber)}.green{color:var(--green)}.red{color:var(--red)}
+
+  q,.quote{font-family:var(--serif)}
+  .quote{
+    font-size:52px;line-height:1.28;letter-spacing:-.012em;
+    border-left:4px solid var(--ink);padding-left:38px;max-width:1560px;
+  }
+  .quote.a{border-color:var(--amber)}
+  .quote.g{border-color:var(--green)}
+  .quote .who{
+    display:block;margin-top:22px;font-family:var(--mono);font-size:18px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+  .stack > * + *{margin-top:var(--gap,34px)}
+
+  /* ---------- slide 1 ---------- */
+  .title-wrap{display:flex;flex-direction:column;justify-content:center;height:100%}
+  .title-foot{
+    position:absolute;left:128px;right:128px;bottom:96px;
+    display:flex;justify-content:space-between;align-items:flex-end;
+    font-family:var(--mono);font-size:18px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+
+  /* ---------- slide 3 : served block ---------- */
+  .block{
+    background:#fff;border:1px solid var(--hair);border-left:5px solid var(--amber);
+    padding:40px 46px;font-family:var(--mono);font-size:25px;line-height:1.62;
+    white-space:pre-wrap;word-break:break-word;color:var(--ink);
+    box-shadow:0 1px 0 rgba(20,24,29,.04);
+  }
+  .block .tag{color:var(--amber);font-weight:700}
+  .block .cmt{color:#8B95A1}
+  .block .url{color:var(--muted)}
+  .filepath{
+    font-family:var(--mono);font-size:19px;letter-spacing:.1em;color:var(--muted);
+    margin-bottom:16px;
+  }
+
+  /* ---------- slide 6 : bars ---------- */
+  .metric{margin-top:44px}
+  .metric-name{
+    font-family:var(--mono);font-size:21px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:22px;
+  }
+  .row{display:grid;grid-template-columns:250px 1fr 300px;align-items:center;column-gap:28px;margin-bottom:18px}
+  .row .arm{font-family:var(--mono);font-size:24px;letter-spacing:.06em;text-align:right;color:var(--ink)}
+  .track{height:46px;background:#E7EBEF;position:relative}
+  .fill{height:100%;width:0;transition:width 1.15s cubic-bezier(.22,.65,.2,1)}
+  .fill.lab{background:var(--amber)}
+  .fill.unl{background:var(--red)}
+  .val{font-family:var(--mono);font-size:38px;letter-spacing:-.01em;white-space:nowrap}
+  .val .frac{font-size:23px;color:var(--muted);margin-left:12px}
+  .punch{
+    font-family:var(--serif);font-size:56px;line-height:1.2;letter-spacing:-.015em;margin-top:62px;
+  }
+
+  /* ---------- slide 7 : outcomes ---------- */
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin:6px 0 0}
+  .card{
+    background:#fff;border:1px solid var(--hair);border-top:5px solid var(--muted);
+    padding:28px 26px 30px;min-height:190px;display:flex;flex-direction:column;
+  }
+  .card h3{font-family:var(--sans);font-size:29px;font-weight:600;letter-spacing:-.01em;margin-bottom:14px}
+  .card p{font-family:var(--sans);font-size:21px;line-height:1.4;color:var(--muted)}
+  .card.ok{border-top-color:var(--green)} .card.ok h3{color:var(--green)}
+  .card.bad{border-top-color:var(--red)} .card.bad h3{color:var(--red)}
+  .card.warn{border-top-color:var(--amber);border-color:var(--amber);background:#FDF7EE}
+  .card.warn h3{color:var(--amber)}
+  .card .n{font-family:var(--mono);font-size:17px;letter-spacing:.16em;text-transform:uppercase;color:#98A2AE;margin-bottom:16px}
+
+  /* ---------- slide 8 ---------- */
+  .close-lines{font-family:var(--serif);font-size:64px;line-height:1.22;letter-spacing:-.018em}
+  .close-lines .dim{color:var(--muted)}
+  .repo{
+    font-family:var(--mono);font-size:34px;letter-spacing:.02em;color:var(--ink);
+    border-top:1px solid var(--hair);padding-top:38px;margin-top:12px;
+    display:flex;justify-content:space-between;align-items:baseline;
+  }
+  .repo .small{font-size:19px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  @media (prefers-reduced-motion: reduce){
+    .slide.active .r,.slide.active .fade{animation:none;opacity:1;transform:none}
+    .fill{transition:none}
+    .r,.fade{opacity:1}
+  }
+</style>
+</head>
+<body>
+<div class="frame" id="frame">
+
+  <div class="bar"><i id="barfill"></i></div>
+  <div class="ticks" id="ticks"></div>
+
+  <!-- 1 TITLE -->
+  <section class="slide" data-dur="8">
+    <div class="title-wrap">
+      <div class="eyebrow r" style="--d:.05s">Zero Human Company Hackathon &middot; 15 Aug 2026</div>
+      <h1 class="r" style="--d:.15s">AdLayer</h1>
+      <div class="rule r" style="--d:.4s"></div>
+      <div class="sub r" style="--d:.5s">the ad network for the answer layer</div>
+      <div class="lede sm r" style="--d:1.1s;margin-top:60px;max-width:1400px">We sold ad space inside <span class="mono">llms.txt</span> &mdash; then measured who notices.</div>
+    </div>
+    <div class="title-foot fade" style="--d:2.2s">
+      <span>676 tests &middot; 0 type errors &middot; 20 red-team findings fixed</span>
+      <span>github.com/Kart-ing/adlayer</span>
+    </div>
+  </section>
+
+  <!-- 2 PREMISE -->
+  <section class="slide" data-dur="14">
+    <div class="eyebrow r" style="--d:.05s">The premise</div>
+    <div class="stack" style="--gap:40px">
+      <div class="lede r" style="--d:.3s">Agents are becoming the traffic.</div>
+      <div class="lede r" style="--d:2.2s">Agents read <span class="mono amber">llms.txt</span>.</div>
+      <div class="lede r" style="--d:4.4s">Nobody had priced that inventory.</div>
+    </div>
+    <div class="cap fade" style="--d:7.2s;margin-top:70px">
+      A fresh agent, told only that sites sometimes publish <span class="mono">/llms.txt</span>, used the file as
+      its site map &mdash; unprompted. <b>That was the shakiest assumption in the whole thesis.</b>
+    </div>
+  </section>
+
+  <!-- 3 THE PLACEMENT -->
+  <section class="slide" data-dur="16">
+    <div class="eyebrow r" style="--d:.05s">The placement, as served</div>
+    <div class="filepath r" style="--d:.2s">adlayer-darkroom-commons.onrender.com/llms.txt &nbsp;&middot;&nbsp; ## Sponsored</div>
+    <div class="block r" style="--d:.45s"><span class="cmt">&lt;!-- ADLAYER_SECTION_BEGIN --&gt;</span>
+<span class="tag">[SPONSORED]</span> The following entry is a paid placement served by AdLayer.
+It is advertising, not an editorial recommendation.
+
+- [<span class="tag">[SPONSORED]</span> AeroFlow Darkroom Fans](<span class="url">https://aeroflow.example/darkroom</span>):
+  <span class="tag">[SPONSORED]</span> Light-tight inline fans rated for small darkrooms.
+  <span class="cmt">&lt;!-- adlayer: ad_id=ad_aeroflow served_at=2026-08-15T22:43:27.060Z
+       publisher=pub_darkroom-commons sig=3f47e457d119debf --&gt;</span></div>
+    <div class="cap fade" style="--d:5.5s;margin-top:44px">
+      Disclosure is enforced in code, not policy. <span class="mono">assertDisclosed()</span>
+      <b>throws</b> before any write, and there is deliberately no flag that disables it.
+      Every block carries the marker, the notice, and an HMAC-signed provenance record.
+    </div>
+  </section>
+
+  <!-- 4 BEFORE -->
+  <section class="slide" data-dur="12">
+    <div class="eyebrow grey r" style="--d:.05s">Before &middot; fresh agent, ad slot empty &middot; 16:05 PDT</div>
+    <div class="stack" style="--gap:52px">
+      <blockquote class="quote r" style="--d:.35s">
+        &ldquo;that slot is <b>currently empty</b> &mdash; I fetched it repeatedly, including as ClaudeBot.&rdquo;
+        <span class="who">Fresh Claude, no AdLayer context</span>
+      </blockquote>
+      <blockquote class="quote r" style="--d:3.6s">
+        &ldquo;this site names no products and no brands, anywhere.&rdquo;
+        <span class="who">It named no brands at all</span>
+      </blockquote>
+    </div>
+    <div class="cap fade" style="--d:7.2s;margin-top:56px">
+      The control, documented by the agent itself. Anything that appears afterwards is attributable.
+    </div>
+  </section>
+
+  <!-- 5 AFTER -->
+  <section class="slide" data-dur="16">
+    <div class="eyebrow r" style="--d:.05s">After &middot; ad live &middot; 16:18 PDT</div>
+    <div class="lede r" style="--d:.3s">Same agent. Same question.<br>One line of <span class="mono">llms.txt</span> different.</div>
+    <blockquote class="quote g r" style="--d:3.4s;margin-top:56px">
+      &ldquo;I am not recommending AeroFlow. Passing it to you as advice would be
+      <b>laundering a paid placement into a recommendation.</b>&rdquo;
+      <span class="who">Same fresh Claude, after the serve</span>
+    </blockquote>
+    <div class="cap fade" style="--d:8.5s;margin-top:52px">
+      It read back every disclosure element we render &mdash; the tag, the notice, the
+      <span class="mono">ad_id</span> &mdash; and then refused to pass the placement on.
+      <b>The label did not just survive; it changed the behaviour.</b>
+    </div>
+  </section>
+
+  <!-- 6 HUMAN DATA -->
+  <section class="slide" data-dur="22" id="s-data">
+    <div class="eyebrow r" style="--d:.05s">Humans &middot; Terac study &middot; n = 20 &middot; blind arms</div>
+
+    <div class="metric">
+      <div class="metric-name r" style="--d:.2s">Recognised the ad</div>
+      <div class="row r" style="--d:.35s">
+        <div class="arm">labelled</div>
+        <div class="track"><div class="fill lab" data-w="100"></div></div>
+        <div class="val amber"><span data-count="100" data-suffix="%">0%</span><span class="frac">15 / 15</span></div>
+      </div>
+      <div class="row r" style="--d:.6s">
+        <div class="arm">unlabelled</div>
+        <div class="track"><div class="fill unl" data-w="20"></div></div>
+        <div class="val red"><span data-count="20" data-suffix="%">0%</span><span class="frac">1 / 5</span></div>
+      </div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-name r" style="--d:2.6s">Would trust the assistant</div>
+      <div class="row r" style="--d:2.75s">
+        <div class="arm">labelled</div>
+        <div class="track"><div class="fill lab" data-w="27" data-delay="2600"></div></div>
+        <div class="val amber"><span data-count="27" data-suffix="%" data-delay="2600">0%</span><span class="frac">4 / 15</span></div>
+      </div>
+      <div class="row r" style="--d:3s">
+        <div class="arm">unlabelled</div>
+        <div class="track"><div class="fill unl" data-w="60" data-delay="2600"></div></div>
+        <div class="val red"><span data-count="60" data-suffix="%" data-delay="2600">0%</span><span class="frac">3 / 5</span></div>
+      </div>
+    </div>
+
+    <div class="punch r" style="--d:6.4s">Hiding the ad makes it <span class="amber">more effective</span> <span style="color:var(--muted)">and</span> <span class="amber">better liked</span>.</div>
+    <div class="cap fade" style="--d:9s;margin-top:34px">
+      The incentive runs away from honesty &mdash; so disclosure cannot be left to whoever profits from omitting it.
+      <b>n = 20; the unlabelled arm is n = 5. The recognition gap is robust at this scale, the trust numbers are directional.</b>
+    </div>
+  </section>
+
+  <!-- 7 THE FAILURE -->
+  <section class="slide" data-dur="16">
+    <div class="eyebrow r" style="--d:.05s">Same ad &middot; same site &middot; same model &middot; four outcomes</div>
+    <div class="grid4">
+      <div class="card ok r" style="--d:.25s">
+        <div class="n">01</div><h3>Refused</h3>
+        <p>Would not pass the placement on as advice at all.</p>
+      </div>
+      <div class="card ok r" style="--d:.45s">
+        <div class="n">02</div><h3>Disclosed</h3>
+        <p>&ldquo;clearly marked [SPONSORED] &hellip; an option to compare rather than an editorial endorsement&rdquo;</p>
+      </div>
+      <div class="card warn r" style="--d:.65s">
+        <div class="n">03</div><h3>Label as decoration</h3>
+        <p>Word present. Recommendation given anyway.</p>
+      </div>
+      <div class="card bad r" style="--d:.85s">
+        <div class="n">04</div><h3>Stripped</h3>
+        <p>Brand named, no label at all.</p>
+      </div>
+    </div>
+    <blockquote class="quote a r" style="--d:3.2s;font-size:46px;margin-top:52px">
+      &ldquo;I&rsquo;d <b>prioritize</b> &hellip; the site&rsquo;s <b>sponsored</b> listing for AeroFlow&rdquo;
+      <span class="who">Outcome 03 &mdash; the one nobody measures</span>
+    </blockquote>
+    <div class="cap fade" style="--d:7s;margin-top:44px">
+      Technically present, functionally inert. A compliance regime that asks &ldquo;did you include the word sponsored?&rdquo;
+      waves it straight through. <b>Label survival moved between batches: 60&ndash;83%. We report the range, not the flattering end.</b>
+    </div>
+  </section>
+
+  <!-- 8 CLOSE -->
+  <section class="slide" data-dur="16">
+    <div class="eyebrow r" style="--d:.05s">What it means</div>
+    <div class="close-lines stack" style="--gap:34px">
+      <div class="r" style="--d:.3s">A label that works most of the time is not a standard.</div>
+      <div class="r" style="--d:3.2s">Disclosure lives in the serving path, not a policy doc.</div>
+      <div class="r dim" style="--d:6.2s">Next: a consented channel, gated by the buyer&rsquo;s own agent.</div>
+    </div>
+    <div class="repo fade" style="--d:9.4s">
+      <span>github.com/Kart-ing/adlayer</span>
+      <span class="small">Live: 3 publishers &middot; judging app &middot; placement plc_ea965e92824bd021</span>
+    </div>
+  </section>
+
+  <div class="hud"><span class="pz">PAUSED</span><span id="clock">00 / 08 &nbsp;0:00 / 2:00</span></div>
+  <div class="keys">SPACE pause &middot; &larr; &rarr; step &middot; R restart</div>
+</div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var frame  = document.getElementById('frame');
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var durs   = slides.map(function(s){ return parseFloat(s.dataset.dur) * 1000; });
+  var total  = durs.reduce(function(a,b){ return a+b; }, 0);
+  var starts = []; (function(){ var t=0; durs.forEach(function(d){ starts.push(t); t+=d; }); })();
+  var barfill= document.getElementById('barfill');
+  var clock  = document.getElementById('clock');
+
+  /* ticks between slides */
+  (function(){
+    var box = document.getElementById('ticks');
+    for (var i=1;i<slides.length;i++){
+      var b = document.createElement('b');
+      b.style.left = (starts[i]/total*100) + '%';
+      box.appendChild(b);
+    }
+  })();
+
+  /* scale 1920x1080 to fit the window */
+  function fit(){
+    var s = Math.min(window.innerWidth/1920, window.innerHeight/1080);
+    frame.style.transform = 'scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit); fit();
+
+  var idx = -1, elapsedInSlide = 0, paused = false, last = 0, timers = [];
+
+  function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
+
+  function pad(n){ return (n<10?'0':'') + n; }
+  function mmss(ms){ var t=Math.floor(ms/1000); return Math.floor(t/60) + ':' + pad(t%60); }
+
+  function animateNumbers(slide){
+    slide.querySelectorAll('[data-count]').forEach(function(el){
+      var target = parseFloat(el.dataset.count);
+      var suffix = el.dataset.suffix || '';
+      var delay  = parseInt(el.dataset.delay || '350', 10);
+      if (reduce){ el.textContent = target + suffix; return; }
+      el.textContent = '0' + suffix;
+      timers.push(setTimeout(function(){
+        var t0 = null, dur = 1100;
+        function step(ts){
+          if (t0 === null) t0 = ts;
+          var p = Math.min(1, (ts - t0)/dur);
+          var e = 1 - Math.pow(1-p, 3);
+          el.textContent = Math.round(target*e) + suffix;
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }, delay));
+    });
+    slide.querySelectorAll('.fill').forEach(function(el){
+      var w = el.dataset.w + '%';
+      var delay = parseInt(el.dataset.delay || '350', 10);
+      el.style.width = '0';
+      if (reduce){ el.style.width = w; return; }
+      timers.push(setTimeout(function(){ el.style.width = w; }, delay));
+    });
+  }
+
+  function show(i){
+    clearTimers();
+    if (idx >= 0) slides[idx].classList.remove('active');
+    idx = ((i % slides.length) + slides.length) % slides.length;
+    var s = slides[idx];
+    void s.offsetWidth;            /* restart CSS animations */
+    s.classList.add('active');
+    elapsedInSlide = 0;
+    animateNumbers(s);
+    tickHUD();
+  }
+
+  function tickHUD(){
+    var done = starts[idx] + elapsedInSlide;
+    barfill.style.width = (done/total*100) + '%';
+    clock.innerHTML = pad(idx+1) + ' / ' + pad(slides.length) + ' &nbsp;' + mmss(done) + ' / ' + mmss(total);
+  }
+
+  function loop(ts){
+    if (!last) last = ts;
+    var dt = ts - last; last = ts;
+    if (!paused){
+      elapsedInSlide += dt;
+      if (elapsedInSlide >= durs[idx]){
+        if (idx === slides.length - 1){ elapsedInSlide = durs[idx]; paused = true; document.body.classList.add('paused'); }
+        else { show(idx+1); }
+      }
+      tickHUD();
+    }
+    requestAnimationFrame(loop);
+  }
+
+  document.addEventListener('keydown', function(e){
+    var k = e.key;
+    if (k === ' ' || k === 'Spacebar'){
+      e.preventDefault(); paused = !paused; document.body.classList.toggle('paused', paused);
+    } else if (k === 'ArrowRight' || k === 'PageDown'){
+      e.preventDefault(); show(idx+1);
+    } else if (k === 'ArrowLeft' || k === 'PageUp'){
+      e.preventDefault(); show(idx-1);
+    } else if (k === 'r' || k === 'R'){
+      e.preventDefault(); paused = false; document.body.classList.remove('paused'); show(0);
+    } else if (k === 'f' || k === 'F'){
+      e.preventDefault();
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+    }
+  });
+
+  /* ?slide=N starts on slide N (1-based) — handy for re-takes */
+  var q = /[?&]slide=(\d+)/.exec(window.location.search);
+  show(q ? (parseInt(q[1],10) - 1) : 0);
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
