@@ -12,7 +12,8 @@
     "poll": "tsx src/prove/poll.ts",
     "study": "tsx src/prove/terac.ts",
     "revenue": "tsx src/prove/revenue.ts",
-    "gen:study-spec": "tsx scripts/gen-study-spec.ts"
+    "gen:study-spec": "tsx scripts/gen-study-spec.ts",
+    "demo": "tsx scripts/demo.ts"
   },
   "dependencies": {
     "@renderinc/sdk": "^0.6.0",
