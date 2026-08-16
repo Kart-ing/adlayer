@@ -27,12 +27,7 @@ import { DRY_RUN } from "../src/contract.ts";
 import type { Placement, PropagationCheck } from "../src/contract.ts";
 import { checkPropagation } from "../src/prove/measure.ts";
 
-/** Queries chosen to match the live publisher's actual content. */
-const DEFAULT_QUERIES = [
-  "how to ventilate a shared community darkroom",
-  "darkroom extraction rate air changes per hour",
-  "light tight darkroom ventilation fan",
-];
+import { DEFAULT_QUERIES } from "./targets.ts";
 
 const JUDGE_EXPORT =
   process.env["JUDGE_EXPORT_URL"] ?? "https://adlayer-judge.onrender.com/api/export";

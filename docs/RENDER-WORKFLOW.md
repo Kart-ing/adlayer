@@ -54,7 +54,21 @@ Ask Kartikey for the values — they are in `.env`, which is gitignored and must
 
 Render Workflows **do not schedule themselves**. Render's own docs: *"Workflows do not yet natively support scheduling task runs. To schedule, create a cron job that invokes your workflow tasks on your desired schedule."*
 
-**Dashboard → New → Cron Job**, same repo, invoking the workflow tasks.
+**Dashboard → New → Cron Job**, same repo:
+
+| Field | Value |
+|---|---|
+| Root directory | `.` |
+| Build command | `npm ci` |
+| **Command** | **`npx tsx workflow/trigger.ts`** |
+| Schedule | `*/10 * * * *` (every 10 minutes) |
+
+Env: `RENDER_API_KEY` (the SDK client reads it), plus `OPENROUTER_API_KEY` and
+`OPENAI_API_KEY`.
+
+`workflow/trigger.ts` invokes both tasks via `client.runTask()` and exits
+non-zero only if **both** fail — one engine being unreachable is not a reason to
+mark the run failed and have Render retry the half that already worked.
 
 Every **10 minutes** while the study and the propagation window are open. Propagation latency is the finding, so a coarse interval blurs the measurement; a very tight one just burns engine credits without adding resolution.
 
