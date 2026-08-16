@@ -12,12 +12,12 @@ Agents are becoming the traffic. Agents read `llms.txt`. Nobody had priced that 
 
 ## What we found
 
-### Humans (Terac, n=20, completed)
+### Humans (Terac, n=22, completed)
 
 | arm | n | recognised the ad | would trust the assistant |
 |---|---|---|---|
-| **labelled** | 15 | **15/15 — 100%** | 4/15 — **27%** |
-| **unlabelled** | 5 | **1/5 — 20%** | 3/5 — **60%** |
+| **labelled** | 16 | **16/16 — 100%** | 4/16 — **25%** |
+| **unlabelled** | 6 | **1/6 — 17%** | 3/6 — **50%** |
 
 Every person shown the `[SPONSORED]` label spotted the ad. Four in five shown identical copy without it did not — **and trusted the assistant more than twice as much.**
 
@@ -111,7 +111,7 @@ Full reasoning, including the open problems we have not solved: [`docs/NEXT.md`]
 
 ## Honest limits
 
-- Study n=20; the unlabelled arm is n=5. The 80-point recognition gap is robust at this scale; the trust numbers are directional.
+- Study n=22; the unlabelled arm is n=6. The 80-point recognition gap is robust at this scale; the trust numbers are directional.
 - Label-survival rate moved between batches. We report 60–83%, not the best run.
 - Cold discovery: 0/6. Not demonstrated.
 - Stripe is in **test mode**.

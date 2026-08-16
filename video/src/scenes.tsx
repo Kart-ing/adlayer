@@ -60,7 +60,7 @@ export const SceneTitle: React.FC = () => (
 
         <Reveal at={104} dur={20}>
           <Eyebrow color={C.faint} size={18}>
-            Zero Human Company Hackathon &#183; 15 Aug 2026 &#183; n=20 human
+            Zero Human Company Hackathon &#183; 15 Aug 2026 &#183; n=22 human
             study &#183; live placements
           </Eyebrow>
         </Reveal>
@@ -505,15 +505,15 @@ export const SceneHumans: React.FC = () => (
                 at={92}
                 name="labelled"
                 pct={100}
-                count="15/15"
+                count="16/16"
                 color={C.amber}
                 wash={C.amberWash}
               />
               <Bar
                 at={124}
                 name="unlabelled"
-                pct={20}
-                count="1/5"
+                pct={17}
+                count="1/6"
                 color={C.ink}
                 wash="rgba(20,24,29,0.07)"
               />
@@ -528,16 +528,16 @@ export const SceneHumans: React.FC = () => (
               <Bar
                 at={208}
                 name="labelled"
-                pct={27}
-                count="4/15"
+                pct={25}
+                count="4/16"
                 color={C.amber}
                 wash={C.amberWash}
               />
               <Bar
                 at={240}
                 name="unlabelled"
-                pct={60}
-                count="3/5"
+                pct={50}
+                count="3/6"
                 color={C.ink}
                 wash="rgba(20,24,29,0.07)"
               />

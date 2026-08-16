@@ -34,14 +34,14 @@ export const H = 1080;
 
 // Scene table — start frame and duration, 30fps.
 export const SCENES = [
-  { id: "title", label: "TITLE", start: 0, dur: 240 },
-  { id: "premise", label: "THE PREMISE", start: 240, dur: 420 },
-  { id: "placement", label: "THE PLACEMENT", start: 660, dur: 480 },
-  { id: "before", label: "BEFORE", start: 1140, dur: 360 },
-  { id: "after", label: "AFTER", start: 1500, dur: 480 },
-  { id: "humans", label: "THE HUMAN DATA", start: 1980, dur: 660 },
-  { id: "failure", label: "THE FAILURE", start: 2640, dur: 480 },
-  { id: "close", label: "CLOSE", start: 3120, dur: 480 },
+  { id: "title", label: "TITLE", start: 0, dur: 180 },
+  { id: "premise", label: "THE PREMISE", start: 180, dur: 300 },
+  { id: "placement", label: "THE PLACEMENT", start: 480, dur: 360 },
+  { id: "before", label: "BEFORE", start: 840, dur: 270 },
+  { id: "after", label: "AFTER", start: 1110, dur: 390 },
+  { id: "humans", label: "THE HUMAN DATA", start: 1500, dur: 480 },
+  { id: "failure", label: "THE FAILURE", start: 1980, dur: 360 },
+  { id: "close", label: "CLOSE", start: 2340, dur: 360 },
 ] as const;
 
-export const TOTAL = 3600; // 120s
+export const TOTAL = 2700; // 90s — trimmed from 120s to leave 30s for live screen capture
