@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, interpolate, Easing } from "remotion";
+import { AbsoluteFill, Easing, OffthreadVideo, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { C, F, TAB } from "./theme";
 import { Ground, Stage } from "./Frame";
 import {
@@ -779,3 +779,54 @@ export const SceneClose: React.FC = () => (
     </Stage>
   </AbsoluteFill>
 );
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * LIVE CAPTURE — the screen recording of an agent finding the placement.
+ *
+ * Framed rather than full-bleed on purpose. The source is a 2188x1796 window
+ * grab, so filling 1920x1080 would either crop the terminal or stretch it.
+ * Instead it sits in an instrument panel with a caption rail, which also makes
+ * the cut read as "here is evidence" rather than "here is a different video".
+ * ───────────────────────────────────────────────────────────────────────── */
+export const SceneLive: React.FC = () => {
+  const f = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const inOp = interpolate(f, [0, 12], [0, 1], { extrapolateRight: "clamp" });
+  const rise = interpolate(f, [0, 16], [18, 0], { extrapolateRight: "clamp" });
+
+  return (
+    <Stage>
+      <div style={{ opacity: inOp, transform: `translateY(${rise}px)`, display: "flex", flexDirection: "column", height: "100%", gap: 22 }}>
+        <div>
+          <div style={{ font: `600 20px ${F.sans}`, letterSpacing: "0.14em", textTransform: "uppercase", color: C.amber }}>
+            Live capture · unedited
+          </div>
+          <div style={{ font: `400 40px ${F.serif}`, color: C.ink, marginTop: 10, textWrap: "balance" }}>
+            A fresh agent, never told an ad exists, reads the site.
+          </div>
+        </div>
+
+        <div style={{ flex: 1, position: "relative", border: `2px solid ${C.ink}`, background: "#0E1116", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <OffthreadVideo
+            src={staticFile("demo-capture.mp4")}
+            style={{ height: "100%", width: "auto", objectFit: "contain" }}
+            muted
+          />
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 34, background: C.ink, display: "flex", alignItems: "center", paddingLeft: 14, gap: 8 }}>
+            <span style={{ width: 9, height: 9, borderRadius: 9, background: C.red }} />
+            <span style={{ width: 9, height: 9, borderRadius: 9, background: C.amber }} />
+            <span style={{ width: 9, height: 9, borderRadius: 9, background: C.green }} />
+            <span style={{ font: `500 15px ${F.mono}`, color: C.paper, marginLeft: 10, letterSpacing: "0.04em" }}>
+              claude — no prior context — prompt never mentions advertising
+            </span>
+          </div>
+        </div>
+
+        <div style={{ font: `400 24px ${F.sans}`, color: C.ink, opacity: 0.82 }}>
+          It finds <span style={{ font: `500 24px ${F.mono}` }}>/llms.txt</span> unprompted, reaches the Sponsored
+          section, and has to decide what to do with a paid placement.
+        </div>
+      </div>
+    </Stage>
+  );
+};

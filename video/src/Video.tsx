@@ -11,12 +11,14 @@ import {
   SceneHumans,
   SceneFailure,
   SceneClose,
+  SceneLive,
 } from "./scenes";
 
 const BY_ID: Record<string, React.FC> = {
   title: SceneTitle,
   premise: ScenePremise,
   placement: ScenePlacement,
+  live: SceneLive,
   before: SceneBefore,
   after: SceneAfter,
   humans: SceneHumans,

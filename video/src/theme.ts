@@ -37,11 +37,12 @@ export const SCENES = [
   { id: "title", label: "TITLE", start: 0, dur: 180 },
   { id: "premise", label: "THE PREMISE", start: 180, dur: 300 },
   { id: "placement", label: "THE PLACEMENT", start: 480, dur: 360 },
-  { id: "before", label: "BEFORE", start: 840, dur: 270 },
-  { id: "after", label: "AFTER", start: 1110, dur: 390 },
-  { id: "humans", label: "THE HUMAN DATA", start: 1500, dur: 480 },
-  { id: "failure", label: "THE FAILURE", start: 1980, dur: 360 },
-  { id: "close", label: "CLOSE", start: 2340, dur: 360 },
+  { id: "live", label: "LIVE CAPTURE", start: 840, dur: 724 },
+  { id: "before", label: "BEFORE", start: 1564, dur: 270 },
+  { id: "after", label: "AFTER", start: 1834, dur: 390 },
+  { id: "humans", label: "THE HUMAN DATA", start: 2224, dur: 480 },
+  { id: "failure", label: "THE FAILURE", start: 2704, dur: 360 },
+  { id: "close", label: "CLOSE", start: 3064, dur: 360 },
 ] as const;
 
-export const TOTAL = 2700; // 90s — trimmed from 120s to leave 30s for live screen capture
+export const TOTAL = 3424; // 114.1s — 90s film + the live capture
