@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Sequence } from "remotion";
+import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
 import { C, SCENES } from "./theme";
 import { Chrome } from "./Frame";
 import {
@@ -36,6 +36,7 @@ export const AdLayerVideo: React.FC = () => (
         </Sequence>
       );
     })}
+    <Audio src={staticFile("voiceover.mp3")} />
     <Chrome />
   </AbsoluteFill>
 );

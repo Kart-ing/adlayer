@@ -34,15 +34,15 @@ export const H = 1080;
 
 // Scene table — start frame and duration, 30fps.
 export const SCENES = [
-  { id: "title", label: "TITLE", start: 0, dur: 180 },
-  { id: "premise", label: "THE PREMISE", start: 180, dur: 300 },
-  { id: "placement", label: "THE PLACEMENT", start: 480, dur: 360 },
-  { id: "live", label: "LIVE CAPTURE", start: 840, dur: 724 },
-  { id: "before", label: "BEFORE", start: 1564, dur: 270 },
-  { id: "after", label: "AFTER", start: 1834, dur: 390 },
-  { id: "humans", label: "THE HUMAN DATA", start: 2224, dur: 480 },
-  { id: "failure", label: "THE FAILURE", start: 2704, dur: 360 },
-  { id: "close", label: "CLOSE", start: 3064, dur: 360 },
+  { id: "title", label: "TITLE", start: 0, dur: 235 },
+  { id: "premise", label: "THE PREMISE", start: 235, dur: 392 },
+  { id: "placement", label: "THE PLACEMENT", start: 627, dur: 470 },
+  { id: "live", label: "LIVE CAPTURE", start: 1097, dur: 724 },
+  { id: "before", label: "BEFORE", start: 1821, dur: 352 },
+  { id: "after", label: "AFTER", start: 2173, dur: 509 },
+  { id: "humans", label: "THE HUMAN DATA", start: 2682, dur: 627 },
+  { id: "failure", label: "THE FAILURE", start: 3309, dur: 470 },
+  { id: "close", label: "CLOSE", start: 3779, dur: 470 },
 ] as const;
 
-export const TOTAL = 3424; // 114.1s — 90s film + the live capture
+export const TOTAL = 4249; // 141.6s — matched to the ElevenLabs voiceover
