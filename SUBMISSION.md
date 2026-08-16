@@ -19,7 +19,7 @@ Agents are becoming the traffic. Agents read `llms.txt`. Nobody had priced that 
 | **labelled** | 16 | **16/16 — 100%** | 4/16 — **25%** |
 | **unlabelled** | 6 | **1/6 — 17%** | 3/6 — **50%** |
 
-Every person shown the `[SPONSORED]` label spotted the ad. Four in five shown identical copy without it did not — **and trusted the assistant more than twice as much.**
+Every person shown the `[SPONSORED]` label spotted the ad. Five in six shown identical copy without it did not — **and trusted the assistant more than twice as much.**
 
 **Hiding the ad makes it both more effective and better liked.** That is the whole problem in one line: the incentive runs away from honesty, so disclosure cannot be left to whoever profits from omitting it.
 
@@ -93,7 +93,7 @@ A skeptic agent was then told to delete each agent and hardcode its output. It f
 
 | | |
 |---|---|
-| **Terac** | 20-participant study, 3 blind arms, hosted judging surface with `?submissionId=` attribution |
+| **Terac** | 22-participant study, 3 blind arms, hosted judging surface with `?submissionId=` attribution |
 | **Stripe** | Payment Link + read-only `rk_` key to organisers |
 | **Pioneer** | GLiGuard is the blocking compliance veto — live, moderating every creative |
 | **Render** | 4 services + a Workflow (`poll-propagation`, `snapshot-study`) |
