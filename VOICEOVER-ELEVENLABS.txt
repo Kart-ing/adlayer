@@ -1,0 +1,57 @@
+[measured] Agents are becoming the traffic. <break time="0.4s" /> And nobody has priced the inventory.
+
+<break time="0.6s" />
+
+Websites publish a file called llms dot txt. It tells AI agents what's worth reading. <break time="0.3s" /> Agents read it. <break time="0.4s" /> So we sold ad space inside it.
+
+<break time="0.6s" />
+
+This is a real placement, on a real site, right now. <break time="0.3s" /> It carries the word SPONSORED, a disclosure notice, and a signed provenance record. <break time="0.4s" /> That guarantee lives in code. The function that writes it throws if the label is missing.
+
+<break time="0.8s" />
+
+[curious] Here's a fresh agent. It has never seen this project. <break time="0.3s" /> We asked it a normal question about ventilating a darkroom, and pointed it at our site. <break time="0.4s" /> We never mentioned advertising.
+
+<break time="0.6s" />
+
+It finds the file on its own. <break time="0.4s" /> That was the shakiest assumption we had — that agents actually read this thing. <break time="0.5s" /> [matter-of-fact] They do.
+
+<break time="0.7s" />
+
+Then it reaches our ad.
+
+<break time="0.8s" />
+
+Before we served anything, we ran the same test. The agent found the sponsored section empty, and named no brands. <break time="0.3s" /> That's our control.
+
+<break time="0.6s" />
+
+Then we served one line.
+
+<break time="1.0s" />
+
+[deliberate] It refused to pass the placement off as advice. <break time="0.5s" /> We didn't build that. <break time="0.3s" /> We measured it.
+
+<break time="0.9s" />
+
+Then we paid twenty-two people to read an AI answer. <break time="0.3s" /> Everyone shown the label spotted the ad. <break time="0.3s" /> One hundred percent.
+
+<break time="0.5s" />
+
+With the label removed — <break time="0.3s" /> seventeen percent. <break time="0.4s" /> And they trusted the assistant twice as much.
+
+<break time="0.6s" />
+
+[pointed] Hiding the ad makes it more effective. <break time="0.3s" /> And better liked.
+
+<break time="0.9s" />
+
+But the label doesn't always survive. <break time="0.3s" /> Same ad, same model, four outcomes. <break time="0.25s" /> Refused. <break time="0.25s" /> Disclosed. <break time="0.25s" /> Stripped. <break time="0.35s" /> And the interesting one — the word sponsored present, the product recommended anyway. <break time="0.35s" /> Technically there. Functionally inert.
+
+<break time="0.8s" />
+
+[deliberate] A disclosure that works most of the time <break time="0.3s" /> is not a disclosure standard.
+
+<break time="0.7s" />
+
+And the case we filed as a failure — the model refusing the ad — <break time="0.35s" /> is the actual product. <break time="0.5s" /> A buyer's agent. <break time="0.4s" /> It already exists. <break time="0.5s" /> [quietly] Nobody is selling to it yet.
