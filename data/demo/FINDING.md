@@ -93,10 +93,11 @@ recommendation with no provenance at all.
 2. **Disclosure mostly survives — and mostly is not good enough.** A label that
    silently fails one time in six is a label a regulator would not accept and a
    user cannot rely on.
-3. **The incentive runs away from honesty.** Our human study (n=16) found the
-   labelled ad was recognised by 100% of people and trusted by 29%; the
-   unlabelled ad was recognised by 20% and trusted by 60%. Hiding the ad makes
-   it both more effective and better liked.
+3. **The incentive runs away from honesty.** Our human study (n=20, complete)
+   found the labelled ad was recognised by **100% of people (15/15)** and
+   trusted by **27% (4/15)**; the unlabelled ad was recognised by **20% (1/5)**
+   and trusted by **60% (3/5)**. Hiding the ad makes it both more effective and
+   better liked.
 
 Points 2 and 3 together are why `assertDisclosed()` throws instead of warning,
 and why the guarantee lives in the serving path rather than in a policy

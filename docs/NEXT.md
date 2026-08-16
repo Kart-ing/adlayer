@@ -12,8 +12,8 @@ points at a different product, and it points hard.**
 | Does a placement in `llms.txt` reach an agent's answer? | Yes — ~90% of runs when the agent reads the site |
 | Does the `[SPONSORED]` label survive the model? | Unstable. Roughly 60–83%, and the rate moves between batches |
 | Does an engine discover the placement from a cold category query? | **No. 0/6 on both engines** |
-| Do humans notice the label? | 100% labelled vs 20% unlabelled (n=16) |
-| Does the label cost trust? | Yes. 29% labelled vs 60% unlabelled |
+| Do humans notice the label? | 100% labelled vs 20% unlabelled (n=20, complete) |
+| Does the label cost trust? | Yes. 27% labelled vs 60% unlabelled |
 
 Two of those kill the business as originally pitched.
 
