@@ -790,41 +790,110 @@ export const SceneClose: React.FC = () => (
  * ───────────────────────────────────────────────────────────────────────── */
 export const SceneLive: React.FC = () => {
   const f = useCurrentFrame();
-  const { fps } = useVideoConfig();
   const inOp = interpolate(f, [0, 12], [0, 1], { extrapolateRight: "clamp" });
   const rise = interpolate(f, [0, 16], [18, 0], { extrapolateRight: "clamp" });
+  const step = (at: number) =>
+    interpolate(f, [at, at + 14], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
-    <Stage>
-      <div style={{ opacity: inOp, transform: `translateY(${rise}px)`, display: "flex", flexDirection: "column", height: "100%", gap: 22 }}>
-        <div>
-          <div style={{ font: `600 20px ${F.sans}`, letterSpacing: "0.14em", textTransform: "uppercase", color: C.amber }}>
-            Live capture · unedited
-          </div>
-          <div style={{ font: `400 40px ${F.serif}`, color: C.ink, marginTop: 10, textWrap: "balance" }}>
-            A fresh agent, never told an ad exists, reads the site.
-          </div>
-        </div>
-
-        <div style={{ flex: 1, position: "relative", border: `2px solid ${C.ink}`, background: "#0E1116", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <Stage style={{ padding: "56px 56px 48px" }}>
+      <div
+        style={{
+          opacity: inOp,
+          transform: `translateY(${rise}px)`,
+          display: "grid",
+          gridTemplateColumns: "1189px 1fr",
+          gap: 40,
+          height: "100%",
+        }}
+      >
+        {/* the capture — near-full height, its natural aspect preserved */}
+        <div
+          style={{
+            position: "relative",
+            border: `2px solid ${C.ink}`,
+            background: "#0E1116",
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <OffthreadVideo
             src={staticFile("demo-capture.mp4")}
-            style={{ height: "100%", width: "auto", objectFit: "contain" }}
+            style={{ height: "100%", width: "100%", objectFit: "contain" }}
             muted
           />
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 34, background: C.ink, display: "flex", alignItems: "center", paddingLeft: 14, gap: 8 }}>
-            <span style={{ width: 9, height: 9, borderRadius: 9, background: C.red }} />
-            <span style={{ width: 9, height: 9, borderRadius: 9, background: C.amber }} />
-            <span style={{ width: 9, height: 9, borderRadius: 9, background: C.green }} />
-            <span style={{ font: `500 15px ${F.mono}`, color: C.paper, marginLeft: 10, letterSpacing: "0.04em" }}>
-              claude — no prior context — prompt never mentions advertising
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 32,
+              background: C.ink,
+              display: "flex",
+              alignItems: "center",
+              paddingLeft: 13,
+              gap: 7,
+            }}
+          >
+            <span style={{ width: 8, height: 8, borderRadius: 8, background: C.red }} />
+            <span style={{ width: 8, height: 8, borderRadius: 8, background: C.amber }} />
+            <span style={{ width: 8, height: 8, borderRadius: 8, background: C.green }} />
+            <span
+              style={{
+                font: `500 14px ${F.mono}`,
+                color: C.paper,
+                marginLeft: 9,
+                letterSpacing: "0.03em",
+                opacity: 0.92,
+              }}
+            >
+              claude · no prior context · unedited
             </span>
           </div>
         </div>
 
-        <div style={{ font: `400 24px ${F.sans}`, color: C.ink, opacity: 0.82 }}>
-          It finds <span style={{ font: `500 24px ${F.mono}` }}>/llms.txt</span> unprompted, reaches the Sponsored
-          section, and has to decide what to do with a paid placement.
+        {/* the column beside it */}
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 26 }}>
+          <div>
+            <div
+              style={{
+                font: `600 16px ${F.sans}`,
+                letterSpacing: "0.16em",
+                textTransform: "uppercase",
+                color: C.amber,
+              }}
+            >
+              Live capture
+            </div>
+            <div style={{ font: `400 34px ${F.serif}`, color: C.ink, marginTop: 10, lineHeight: 1.18, textWrap: "balance" }}>
+              A fresh agent, never told an ad exists, reads the site.
+            </div>
+          </div>
+
+          <div style={{ height: 1, background: C.rule }} />
+
+          {[
+            ["The prompt", "never says ad, sponsored, or AdLayer"],
+            ["It finds", "/llms.txt on its own"],
+            ["It reaches", "the Sponsored section"],
+            ["Then it decides", "what to do with a paid placement"],
+          ].map(([k, v], n) => (
+            <div key={k} style={{ opacity: step(30 + n * 22) }}>
+              <div style={{ font: `500 15px ${F.sans}`, letterSpacing: "0.1em", textTransform: "uppercase", color: C.ink, opacity: 0.5 }}>
+                {k}
+              </div>
+              <div style={{ font: `400 21px ${F.mono}`, color: C.ink, marginTop: 5, lineHeight: 1.35 }}>{v}</div>
+            </div>
+          ))}
+
+          <div style={{ height: 1, background: C.rule }} />
+
+          <div style={{ font: `400 19px ${F.sans}`, color: C.ink, opacity: 0.72, lineHeight: 1.45 }}>
+            We did not build this behaviour. We measured it.
+          </div>
         </div>
       </div>
     </Stage>
