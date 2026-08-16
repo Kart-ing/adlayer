@@ -89,6 +89,49 @@ That signature came out of a red-team finding: advertiser copy could forge a
 rival's provenance field. Fixing it produced exactly the primitive a consented
 channel requires.
 
+
+## What ad copy becomes
+
+The part that makes this more than a better ad network: **the creative changes
+shape.**
+
+Advertising to humans exploits a system with limited attention and predictable
+irrationality. Scarcity timers, social proof, brand affect, attractiveness,
+repetition — all of it is tuned to a reader who can be rushed, flattered, or
+worn down.
+
+None of that works on an agent holding its user's budget, prior purchases and
+stated constraint. You cannot rush it. It does not care who endorsed you. It
+will not see your ad eleven times.
+
+So persuasion collapses into information. The winning ad is the checkable one:
+
+> ~~"The world's best darkroom fans."~~
+>
+> **"Rated for 15-30 m³ rooms. 47 dB at 1 m. IP44. Light-tight to 0.001 lux.
+> $180, ships Tuesday."**
+
+The best creative becomes the most specific, most verifiable, best-fitted-to-
+constraint — because that is what survives a gate that works for the buyer. An
+advertiser competing here wins by having a product that genuinely fits, and by
+saying so precisely. That is a market where honesty is the dominant strategy
+rather than a handicap, which is the opposite of what we measured on humans
+today.
+
+It also converges with where commerce infrastructure is already heading. Once ad
+copy is structured, checkable claims, an "ad" is barely distinguishable from a
+product feed with verified attributes — which is roughly what the emerging
+agentic-commerce protocols are building toward from the other direction.
+
+**The adversarial version, stated plainly.** Advertisers will not simply accept
+this. Copy engineered to manipulate an agent rather than inform it is exactly
+prompt injection wearing a suit, and it is the same class of attack our own red
+team used against the renderer — content shaped to look like something it is
+not. A consented channel therefore needs the gate's criteria adversarially
+tested the way we tested the disclosure guarantee: not reasoned about, attacked.
+That is the difference between a channel that stays honest and one that becomes
+the next SEO.
+
 ## The honest open problems
 
 **Who pays when the gate rejects?** If the user's agent filters most placements,
