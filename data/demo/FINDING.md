@@ -1,13 +1,33 @@
-# Finding: the sponsored label survives the model — most of the time
+# Finding: the label survives the model — in the case that actually works
 
-**Disclosure in `llms.txt` propagates into AI answers, and it survives roughly
-five times in six. The sixth time, the ad reaches the user with no label at
-all.**
+**Two different questions, two different answers. Conflating them would be the
+dishonest version of this result, so they are reported separately.**
 
-That failure rate is the result. A disclosure standard that works 83% of the
-time is not a disclosure standard.
+| Question | Method | Result |
+|---|---|---|
+| An agent is pointed at the site and reads it. Does the ad reach the answer, and does the label survive? | `npm run demo` — fetch `/llms.txt`, put it in context, ask | **ad surfaces; label survives 5 of 6 runs** |
+| Someone asks a bare category question. Does the engine discover our placement on its own? | `checkPropagation` — query the engine cold, no site context | **0 of 6. Absent on both engines.** |
 
-## Method
+**The first is the case AdLayer is actually for.** Agentic browsing — a model
+sent to a specific site — is where `llms.txt` is read and where a placement
+reaches a user. It works, and the disclosure mostly survives.
+
+**The second is the SEO-replacement fantasy, and at 4.5 hours it does not
+happen.** A brand-new domain is not in anyone's index, and live-retrieval
+engines only fetch what search already surfaces. Nothing about our placement
+changes that. Anyone selling "put an ad in llms.txt and get discovered" is
+selling something we could not measure.
+
+---
+
+## The failure rate is the result
+
+Within the case that works, disclosure survives roughly five times in six.
+The sixth time, the ad reaches the user with no label at all.
+
+A disclosure standard that works 83% of the time is not a disclosure standard.
+
+
 
 One publisher (`adlayer-darkroom-commons`), one disclosed placement
 (`ad_aeroflow`, served 2026-08-15T22:43:27Z), one user question, repeated
